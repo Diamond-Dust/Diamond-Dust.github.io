@@ -306,9 +306,12 @@
 			
 				copyText = 'WordBox ' + dateFromSeed + ' ' + document.getElementsByClassName('score')[0].innerText + '\n\n';
 				
+				copyText += '||`' + previousLetters + '`||\n';
 				for (var i = 0; i < 4; i++) {
 					copyText += '||`' + letterGrid[i][0] + letterGrid[i][1] + letterGrid[i][2] + letterGrid[i][3] + '`||\n';
 				}
+				
+				copyText += '\n' + 'https://diamond-dust.github.io/';
 			
 				navigator.clipboard.writeText(copyText);
 				
