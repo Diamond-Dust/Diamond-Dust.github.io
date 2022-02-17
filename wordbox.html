@@ -301,7 +301,7 @@
 			}
 			
 			function shareGame() {
-				dateFromSeed = seedVal.toString();
+				dateFromSeed = (seedVal + 100).toString();
 				dateFromSeed = dateFromSeed.slice(0, 4) + '-' + dateFromSeed.slice(4, 6) + '-' + dateFromSeed.slice(6, 8);
 			
 				copyText = 'WordBox ' + dateFromSeed + ' ' + document.getElementsByClassName('score')[0].innerText + '\n\n';
