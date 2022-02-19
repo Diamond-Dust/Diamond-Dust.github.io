@@ -33,6 +33,9 @@
 			}
 			
 			.word_box_cell {
+				display: flex;
+				justify-content: center;
+				align-items: center;
 				min-height: 7.5vh;
 				min-width: 7.5vh;
 				border-width: 0.075vw;
@@ -41,8 +44,6 @@
 				
 				font-family: "American Captain", "Tahoma", monospace;
 				font-size: 5vh;
-				text-align: center;
-				vertical-align: middle;
 			}
 			
 			.word {
@@ -81,18 +82,58 @@
 				align-content: flex-end;
 			}
 			
-			#letter_list {
-				font-size: 3vh;
-				color: gray;
+			@media (max-aspect-ratio: 1/1) {
+				#letter_list {
+					font-size: 3.5vw;
+					color: gray;
+				}
+				
+				#current_letter {
+					font-size: 8vw;
+					
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					
+					min-height: 9vw;
+					min-width: 9vw;
+					border-width: 0.05vw;
+					border-color: black;
+					border-style: solid;
+					border-radius: 5%;
+				}
+				
+				#inv_letter_list {
+					font-size: 3.5vw;
+					visibility: hidden;
+				}
 			}
 			
-			#current_letter {
-				font-size: 6vh;
-			}
-			
-			#inv_letter_list {
-				font-size: 3vh;
-				visibility: hidden;
+			@media (min-aspect-ratio: 1/1) {
+				#letter_list {
+					font-size: 3vh;
+					color: gray;
+				}
+				
+				#current_letter {
+					font-size: 4vh;
+					
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					
+					min-height: 5vh;
+					min-width: 5vh;
+					border-width: 0.05vh;
+					border-color: black;
+					border-style: solid;
+					border-radius: 5%;
+				}
+				
+				#inv_letter_list {
+					font-size: 3vh;
+					visibility: hidden;
+				}
 			}
 			
 			#buttons {
@@ -108,7 +149,7 @@
 		<section>
 			<div id="letter_list_section">
 				<div id="letter_list"></div>
-				<div id="current_letter"></div>
+				<div id="current_letter" style="visibility: hidden;"></div>
 				<div id="inv_letter_list"></div>
 			</div>
 			<div id="word_box">
@@ -282,6 +323,7 @@
 				updateLetters();
 				document.getElementById('daily').style.display = "none";
 				document.getElementById('train').style.display = "none";
+				document.getElementById('current_letter').style.visibility = "visible";
 				rules = document.getElementsByClassName('rules');
 				for (var i = 0; i < rules.length; i++) {
 					rules.item(i).style.display = "none";
