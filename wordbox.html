@@ -160,7 +160,7 @@
 			
 			previousLetters = '';
 			currentLetter = ' ';
-			letterGrid = [['', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['', '', '', '']]
+			letterGrid = [[' ', ' ', ' ', ' '], [' ', ' ', ' ', ' '], [' ', ' ', ' ', ' '], [' ', ' ', ' ', ' ']]
 			gameStarted = false;
 			
 			const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
@@ -191,6 +191,37 @@
 			}
 			//---------------- https://stackoverflow.com/a/19301306 ------------------
 			
+			//---------------- https://stackoverflow.com/a/24103596 ------------------
+			function setCookie(name, value) {
+				var expires = "";
+				if (seedVal > 0) {
+					var expire = new Date(); 
+					year = (seedVal - (seedVal % 10000)) / 10000;
+					day = seedVal % 100;
+					month = ((seedVal - (year*10000)) - day) / 100;
+					expire.setFullYear(year);
+					expire.setMonth(month);
+					expire.setDate(day+1);
+					expire.setHours(0);
+					expire.setMinutes(0);
+					expire.setSeconds(0);
+
+					expires = "; expires=" + expire.toString();
+				}
+				document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+			}
+			function getCookie(name) {
+				var nameEQ = name + "=";
+				var ca = document.cookie.split(';');
+				for(var i=0; i < ca.length; i++) {
+					var c = ca[i];
+					while (c.charAt(0)==' ') c = c.substring(1,c.length);
+					if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+				}
+				return null;
+			}
+			//---------------- https://stackoverflow.com/a/24103596 ------------------
+			
 			function randomLetter() {
 				roll = random();
 				for (var i=0; i < 26; i++) {
@@ -201,10 +232,11 @@
 			}
 			
 			function nextLetter() {
-				//TODO
-				letter = randomLetter();
-				previousLetters += currentLetter;
-				currentLetter = letter;
+				if (previousLetters.length < 16) {
+					letter = randomLetter();
+					previousLetters += currentLetter;
+					currentLetter = letter;
+				}
 			}
 			
 			function updateLetters() {
@@ -260,6 +292,14 @@
 						column = parseInt(this.id.charAt(3));
 						row = parseInt(this.id.charAt(2));
 						letterGrid[row][column] = currentLetter;
+						letterGridCookie = '';
+						for (var i=0; i < 16; i++) {
+							row = i/4>>0;
+							column = i%4;
+							letterGridCookie += letterGrid[row][column];
+						}
+						setCookie('letterGrid', letterGridCookie);
+						setCookie('previousLetters', previousLetters);
 						if (previousLetters.length < 16) {
 							nextLetter();
 							updateLetters();
@@ -297,7 +337,26 @@
 				d = new Date();
 				seedVal = d.getFullYear()*10000 + d.getMonth()*100 + d.getDate();
 				seed(seedVal);
-				startGame();
+				letterGridCookie = getCookie('letterGrid');
+				previousLettersCookie = getCookie('previousLetters');
+				if (letterGridCookie) {
+					for (var i=0; i < 16; i++) {
+						row = i/4>>0;
+						column = i%4;
+						letterGrid[row][column] = letterGridCookie[i];
+						document.getElementById('wb' + row.toString() + column.toString()).innerHTML = letterGridCookie[i];
+					}
+					previousLetters = previousLettersCookie;
+					for (var i=0; i < previousLetters.length; i++) {
+						roll = random();
+					}
+					startGame();
+					if (previousLetters.length >= 16) {
+						processScore();
+					}
+				} else {
+					startGame();
+				}
 			}
 			
 			function shareGame() {
