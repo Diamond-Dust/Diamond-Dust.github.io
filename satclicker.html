@@ -282,7 +282,7 @@
 					{Name: "Turek", X: 633, Y: 734},
 					{Name: "Chełm", X: 1313, Y: 928},
 					{Name: "Zamość", X: 1280, Y: 1020},
-					{Name: "Piotrków trybunalski", X: 791, Y: 867},
+					{Name: "Piotrków Trybunalski", X: 791, Y: 867},
 					{Name: "Przemyśl", X: 1212, Y: 1219},
 					{Name: "Sandomierz", X: 1072, Y: 1033},
 					{Name: "Śniardwy Lake", X: 1071, Y: 340},
@@ -295,8 +295,8 @@
 			
 			gameStarted = false;
 			setLocation = '';
-			gameDotsToPrint = [{Name: "Ełk", X: 1159, Y: 327}];
-			playerDotsToPrint = [{Name: "Słupsk", X: 435, Y: 174}];
+			gameDotsToPrint = []; // {Name: "Ełk", X: 1159, Y: 327}
+			playerDotsToPrint = []; // {Name: "Słupsk", X: 435, Y: 174}
 			chosenPlacesIndexes = [];
 			currentPlace = {Name: '', X:0, Y:0};
 
@@ -526,7 +526,7 @@
 			}
 			
 			function placeAllDotsForLocation() {
-				placeDots(locPlaces, 'game_dot');
+				placeDots(preparedPlaces[setLocation], 'game_dot');
 			}
 			
 			function placeGameLinesForLocation() {
