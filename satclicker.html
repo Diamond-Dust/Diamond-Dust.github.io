@@ -1,0 +1,628 @@
+<html>
+	<head>
+		<title> SatClicker </title>
+		<style>
+			body {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: space-between;
+				height: 95vh;
+			}
+			
+			h1 {
+				font-family: "American Captain", "Tahoma", monospace;
+				font-size: 4vh
+			}
+			
+			footer {
+				font-size: 1vh;
+				width: 100%;
+				text-align: center;
+			}
+		
+			.word_box_container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			
+			.word_row_container {
+				display: flex;
+				flex-direction: row;
+			}
+			
+			.word_box_cell {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				min-height: 7.5vh;
+				min-width: 7.5vh;
+				border-width: 0.075vw;
+				border-color: black;
+				border-style: solid;
+				
+				font-family: "American Captain", "Tahoma", monospace;
+				font-size: 5vh;
+			}
+			
+			.word {
+				font-family: "American Captain", "Tahoma", monospace;
+				font-size: 1.5vh;
+				text-align: center;
+			}
+			
+			.score {
+				font-family: "American Captain", "Tahoma", monospace;
+				font-size: 2.5vh;
+				text-align: center;
+			}
+			
+			.rules {
+				font-family: "American Captain", "Tahoma", monospace;
+				font-size: 2vh;
+				text-align: center;
+			}
+			
+			.locations {
+				padding: 1vh 1.5vh;
+				border: none;
+				border-radius: 5%;
+				color: white;
+				background-color: #009900;
+				font-family: "Tahoma", monospace;
+				font-size: 2.75vh;
+				margin: 0vh 1vw;
+			}
+			
+			.start {
+				padding: 1vh 1.5vh;
+				border: none;
+				border-radius: 5%;
+				color: white;
+				background-color: #009900;
+				font-family: "Tahoma", monospace;
+				font-size: 2.75vh;
+				margin: 0vh 1vw;
+			}
+			
+			#letter_list_section {
+				display: flex;
+				justify-content: center;
+				align-items: baseline;
+				align-content: flex-end;
+			}
+			
+			@media (max-aspect-ratio: 1/1) {				
+				#sought_place {
+					font-size: 8vw;
+					
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					
+					min-height: 9vw;
+					min-width: 9vw;
+				}
+				
+				#sat_image {
+					display: block;
+					max-width: 70vw;
+					max-height: 70vw;
+				}
+				
+				.game_dot {
+					height: 0.25vw;
+					width: 0.25vw;
+					position: absolute;
+					z-index: 100;
+					border-radius: 100%;
+				}
+				
+				.game_dot {
+					border: 0.25vw solid red;
+				}
+				
+				.player_dot {
+					border: 0.25vw solid yellow;
+				}
+			}
+			
+			@media (min-aspect-ratio: 1/1) {				
+				#sought_place {
+					font-size: 4vh;
+					
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					
+					min-height: 5vh;
+					min-width: 5vh;
+				}
+				
+				#sat_image {
+					display: block;
+					max-width: 70vh;
+					max-height: 70vh;
+				}
+				
+				.dot {
+					height: 0.25vh;
+					width: 0.25vh;
+					position: absolute;
+					z-index: 100;
+					border-radius: 100%;
+				}
+				
+				.game_dot {
+					border: 0.25vh solid red;
+				}
+				
+				.player_dot {
+					border: 0.25vh solid yellow;
+				}
+			}
+			
+			#buttons {
+				display: flex;
+				justify-content: center;
+			}
+			
+			.game_line {
+				border: 0.2vh solid white;
+				z-index: 50;
+			}
+		</style>
+		<link rel="shortcut icon" href="satclicker/favicon.ico" type="image/x-icon">  
+	</head>
+	<body>
+		<header>
+			<h1> SAT CLICKER </h1>
+		</header>
+		<section>
+			<div id="sought_place_section">
+				<div id="sought_place" style="visibility: hidden;"> A </div>
+			</div>
+			<div id="sat_clicker">
+				<img id="sat_image"></img>
+				<div id="running_score">
+					<div id="place_number"></div>
+					<div id="average_distance"></div>
+				</div>
+			</div>
+		</section>
+		<article id="word_list">
+			<p class="rules">You can choose one of the prepared satellite photoimages from USGS.</p>
+			<p class="rules">You will be given places to point out on the photo.</p>
+			<p class="rules">After choosing a location for the given place, you will be shown where the real place is and the distance.</p>
+			<p class="rules">It's point-to-point, so don't beat yourself up over small differences.</p>
+			<p class="rules">Keep the distance as low as possible!</p>
+			<p class="rules"> </p>
+			<p class="rules">Have fun!</p>
+		</article>
+		<article id="buttons">
+			<button type="button" class="start" id="start" style="display: none;">START</button>
+			<button type="button" class="start" id="share" style="display: none;">SHARE</button>
+		</article>
+		<footer>
+			Łukasz Mrugała, 2022.
+		</footer>
+		
+		<script>
+			const preparedLocations = ["Poland"];
+			const preparedImages = {
+				Poland: "satclicker/sat-poland.png"
+			};
+			const preparedSizes = {
+				Poland: {
+					X: 1400,
+					Y: 1400
+				}
+			}
+			const preparedPlaces = {
+				Poland: [
+					{Name: "Southernmost Point", X: 1225, Y: 1383},
+					{Name: "Northernmost Point", X: 603, Y: 89},
+					{Name: "Warszawa", X: 973, Y: 688},
+					{Name: "Lublin", X: 1186, Y: 905},
+					{Name: "Rzeszów", X: 1110, Y: 1165},
+					{Name: "Kraków", X: 826, Y: 1161},
+					{Name: "Tarnów", X: 970, Y: 1170},
+					{Name: "Kielce", X: 921, Y: 986},
+					{Name: "Bielsko-Biała", X: 706, Y: 1210},
+					{Name: "Katowice", X: 703, Y: 1119},
+					{Name: "Częstochowa", X: 712, Y: 998},
+					{Name: "Opole", X: 553, Y: 1031},
+					{Name: "Wrocław", X: 429, Y: 935},
+					{Name: "Wałbrzych", X: 328, Y: 1006},
+					{Name: "Legnica", X: 312, Y: 913},
+					{Name: "Kalisz", X: 576, Y: 790},
+					{Name: "Poznań", X: 417, Y: 648},
+					{Name: "Zielona Góra", X: 222, Y: 753},
+					{Name: "Gorzów Wielkopolski", X: 186, Y: 576},
+					{Name: "Szczecin", X: 91, Y: 418},
+					{Name: "Koszalin", X: 313, Y: 241},
+					{Name: "Gdańsk", X: 651, Y: 203},
+					{Name: "Gdynia", X: 636, Y: 164},
+					{Name: "Olsztyn", X: 901, Y: 337},
+					{Name: "Białystok", X: 1270, Y: 484},
+					{Name: "Płock", X: 795, Y: 617},
+					{Name: "Włocławek", X: 706, Y: 592},
+					{Name: "Toruń", X: 646, Y: 512},
+					{Name: "Bydgoszcz", X: 564, Y: 488},
+					{Name: "Bełchatów Powerplant", X: 738, Y: 900},
+					{Name: "Ojcowski National Park", X: 810, Y: 1129},
+					{Name: "Słowiński National Park", X: 468, Y: 117},
+					{Name: "Babiogórski National Park", X: 774, Y: 1261},
+					{Name: "Białowieski National Park", X: 1346, Y: 579},
+					{Name: "Biebrzański National Park", X: 1196, Y: 408},
+					{Name: "Bieszczadzki National Park", X: 1201, Y: 1365},
+					{Name: "Bory Tucholskie National Park", X: 504, Y: 329},
+					{Name: "Drawski National Park", X: 282, Y: 496},
+					{Name: "Tatrzański National Park", X: 830, Y: 1328},
+					{Name: "Gorczański National Park", X: 854, Y: 1272},
+					{Name: "Pieniński National Park", X: 888, Y: 1294},
+					{Name: "Góry Stołowe National Park", X: 343, Y: 1073},
+					{Name: "Karkonoski National Park", X: 225, Y: 996},
+					{Name: "Łódź", X: 763, Y: 790},
+					{Name: "Kampinoski National Park", X: 918, Y: 667},
+					{Name: "Magurski National Park", X: 1038, Y: 1265},
+					{Name: "Narwiański National Park", X: 1225, Y: 499},
+					{Name: "Poleski National Park", X: 1259, Y: 863},
+					{Name: "Roztoczański National Park", X: 1241, Y: 1046},
+					{Name: "Świętokrzyski National Park", X: 960, Y: 982},
+					{Name: "Ujście Warty National Park", X: 124, Y: 603},
+					{Name: "Wielkopolski National Park", X: 400, Y: 680},
+					{Name: "Wigierski National Park", X: 1276, Y: 306},
+					{Name: "Woliński National Park", X: 89, Y: 305},
+					{Name: "Hel", X: 671, Y: 142},
+					{Name: "Suwałki", X: 1222, Y: 263},
+					{Name: "Piła", X: 391, Y: 479},
+					{Name: "Gniezno", X: 504, Y: 619},
+					{Name: "Turek", X: 633, Y: 734},
+					{Name: "Chełm", X: 1313, Y: 928},
+					{Name: "Zamość", X: 1280, Y: 1020},
+					{Name: "Piotrków trybunalski", X: 791, Y: 867},
+					{Name: "Przemyśl", X: 1212, Y: 1219},
+					{Name: "Sandomierz", X: 1072, Y: 1033},
+					{Name: "Śniardwy Lake", X: 1071, Y: 340},
+					{Name: "Ełk", X: 1159, Y: 327},
+					{Name: "Giżycko", X: 1079, Y: 276},
+					{Name: "Chojnice", X: 503, Y: 357},
+					{Name: "Słupsk", X: 435, Y: 174}
+				]
+			}
+			
+			gameStarted = false;
+			setLocation = '';
+			gameDotsToPrint = [{Name: "Ełk", X: 1159, Y: 327}];
+			playerDotsToPrint = [{Name: "Słupsk", X: 435, Y: 174}];
+			chosenPlacesIndexes = [];
+			currentPlace = {Name: '', X:0, Y:0};
+
+			//---------------- https://stackoverflow.com/a/19301306 ------------------
+			var m_w = 123456789;
+			var m_z = 987654321;
+			var mask = 0xffffffff;
+			var seedVal = -1;
+
+			// Takes any integer
+			function seed(i) {
+				m_w = (123456789 + i) & mask;
+				m_z = (987654321 - i) & mask;
+			}
+
+			// Returns number between 0 (inclusive) and 1.0 (exclusive),
+			// just like Math.random().
+			function random()
+			{
+				m_z = (36969 * (m_z & 65535) + (m_z >> 16)) & mask;
+				m_w = (18000 * (m_w & 65535) + (m_w >> 16)) & mask;
+				var result = ((m_z << 16) + (m_w & 65535)) >>> 0;
+				result /= 4294967296;
+				return result;
+			}
+			//---------------- https://stackoverflow.com/a/19301306 ------------------
+			//---------------- https://stackoverflow.com/a/55963590 ------------------
+			function linedraw(x1, y1, x2, y2) {
+				if (x2 < x1) {
+					var tmp;
+					tmp = x2 ; x2 = x1 ; x1 = tmp;
+					tmp = y2 ; y2 = y1 ; y1 = tmp;
+				}
+
+				var lineLength = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+				var m = (y2 - y1) / (x2 - x1);
+
+				var degree = Math.atan(m) * 180 / Math.PI;
+				
+				console.log({X:x1, Y:y1});
+
+				document.getElementById('sat_clicker').innerHTML += "<div class='game_line' style='transform-origin: top left; transform: rotate(" + degree + "deg); width: " + lineLength + "px; height: 1px; background: black; position: absolute; top: " + y1 + "px; left: " + x1 + "px;'></div>";
+			}
+			//---------------- https://stackoverflow.com/a/55963590 ------------------
+			
+			
+			function processScore() {
+				words = [];
+				for (var i = 0; i < 4; i++) {
+					words.push(letterGrid[i][0] + letterGrid[i][1] + letterGrid[i][2] + letterGrid[i][3]);
+				}
+				for (var i = 0; i < 4; i++) {
+					words.push(letterGrid[0][i] + letterGrid[1][i] + letterGrid[2][i] + letterGrid[3][i]);
+				}
+				words.push(letterGrid[0][0] + letterGrid[1][1] + letterGrid[2][2] + letterGrid[3][3]);
+				words.push(letterGrid[3][0] + letterGrid[2][1] + letterGrid[1][2] + letterGrid[0][3]);
+				
+				score = 0;
+				
+				wordList = document.getElementById("word_list");
+				for (var i = 0; i < 10; i++) {
+					paragraph = document.createElement("p");
+					paragraph.setAttribute("class", "word");
+					paragraph.innerHTML = words[i];
+					if (allowedWords.has(words[i])) {
+						paragraph.setAttribute("style", "color: green;");
+						score++;
+					} else {
+						paragraph.setAttribute("style", "color: red;");
+					}
+					wordList.appendChild(paragraph);
+				}
+				
+				paragraph = document.createElement("p");
+				paragraph.setAttribute("class", "score");
+				paragraph.innerHTML = score;
+				wordList.appendChild(paragraph);
+				
+				if (seedVal != -1) {
+					document.getElementById('share').removeAttribute('style');
+				}
+				
+				return score;
+			}
+			
+			function cellClick() {
+				if (gameStarted) {
+					cell = document.getElementById(this.id);
+					if (cell.innerHTML == '') {
+						cell.innerHTML = currentLetter;
+						column = parseInt(this.id.charAt(3));
+						row = parseInt(this.id.charAt(2));
+						letterGrid[row][column] = currentLetter;
+						if (previousLetters.length < 16) {
+							nextLetter();
+							updateLetters();
+						} else {
+							previousLetters += currentLetter;
+							currentLetter = '';
+							updateLetters();
+							processScore();
+						}
+					} else {
+					
+					}
+				}
+			}
+			
+			function shareGame() {
+				dateFromSeed = (seedVal + 100).toString();
+				dateFromSeed = dateFromSeed.slice(0, 4) + '-' + dateFromSeed.slice(4, 6) + '-' + dateFromSeed.slice(6, 8);
+			
+				copyText = 'WordBox ' + dateFromSeed + ' ' + document.getElementsByClassName('score')[0].innerText + '\n\n';
+				
+				copyText += '||`' + previousLetters + '`||\n';
+				for (var i = 0; i < 4; i++) {
+					copyText += '||`' + letterGrid[i][0] + letterGrid[i][1] + letterGrid[i][2] + letterGrid[i][3] + '`||\n';
+				}
+				
+				copyText += '\n' + 'https://diamond-dust.github.io/';
+			
+				navigator.clipboard.writeText(copyText);
+				
+				document.getElementById(this.id).style.visibility = "hidden";
+			}
+			
+			function addOnClicks() {
+				cells = document.getElementsByClassName('word_box_cell');
+				for (var i = 0; i < cells.length; i++) {
+					cells.item(i).addEventListener('click', cellClick)
+				}
+				
+				document.getElementById('daily').addEventListener('click', startDailyGame)
+				document.getElementById('train').addEventListener('click', startTrainGame)
+				document.getElementById('share').addEventListener('click', shareGame)
+			}
+			
+			
+			
+			
+			
+			function nextPlace() {
+				roll = random();
+				placeIndex = (roll * preparedPlaces[setLocation].length)|0;
+				currentPlace = preparedPlaces[setLocation][placeIndex];
+			}
+			
+			function updatePlaceName() {
+				document.getElementById('sought_place').innerHTML = currentPlace.Name;
+			}
+			
+			function startGame() {
+				d = new Date();
+				seed(d.getTime());
+				
+				nextPlace();
+				updatePlaceName();
+				document.getElementById('start').style.display = "none";
+				document.getElementById('sought_place').style.visibility = "visible";
+				placeRequiredDots();
+				attachImageClickListener();
+				gameStarted = true;
+			}
+			
+			function startTrainGame() {
+				d = new Date();
+				seed(d.getTime());
+				startGame();
+			}
+			
+			function startDailyGame() {
+				d = new Date();
+				seedVal = d.getFullYear()*10000 + d.getMonth()*100 + d.getDate();
+				seed(seedVal);
+				startGame();
+			}			
+			
+			
+			
+			
+			function removeRules() {
+				rules = document.getElementsByClassName('rules');
+				for (var i = 0; i < rules.length; i++) {
+					rules[i].style.display = "none";
+				}
+			}
+			
+			function getAbsolutePosition(el) {
+				if (typeof(el.offsetParent) != "undefined") {
+					for (var posX =0, posY = 0; el; el = el.offsetParent) {
+						posX += el.offsetLeft;
+						posY += el.offsetTop;
+					}
+					return {X: posX, Y: posY};
+				} else {
+					return {X: el.x, Y: el.y};
+				}
+			}
+			
+			function placeDotOnImage(x, y, name,specClass) {
+				imgHolder = document.getElementById('sat_clicker');
+				imgItself = document.getElementById('sat_image');
+				imgAbsolutePosition = getAbsolutePosition(imgItself);
+				dot = document.createElement('div');
+				dot.id = 'dot_' + name;
+				dot.classList.add('dot');
+				dot.classList.add(specClass);
+				dot.style.left = imgAbsolutePosition.X + (x / preparedSizes[setLocation].X) * imgItself.offsetWidth;
+				dot.style.top = imgAbsolutePosition.Y + (y / preparedSizes[setLocation].Y) * imgItself.offsetHeight;
+				imgHolder.append(dot);
+			}
+			
+			function placeDots(locationList, dotClass) {
+				imgHolder = document.getElementById('sat_clicker');
+				dots = document.getElementsByClassName(dotClass);
+				while (dots.length > 0) {
+					dots[0].parentNode.removeChild(dots[0]);
+				}
+				
+				console.log(locationList);
+				console.log(dotClass);
+				
+				imgItself = document.getElementById('sat_image');
+				for (var i = 0; i < locationList.length; i++) {
+					placeDotOnImage(locationList[i].X, locationList[i].Y, locationList[i].Name, dotClass);
+				}
+			}
+			
+			function placeAllDotsForLocation() {
+				placeDots(locPlaces, 'game_dot');
+			}
+			
+			function placeGameLinesForLocation() {
+				lines = document.getElementsByClassName('game_line');
+				while (lines.length > 0) {
+					lines[0].parentNode.removeChild(lines[0]);
+				}
+				
+				imgItself = document.getElementById('sat_image');
+				imgAbsolutePosition = getAbsolutePosition(imgItself);
+				imgCurrentSize = {X: imgItself.offsetWidth, Y: imgItself.offsetHeight};
+				for (var i = 0; i < gameDotsToPrint.length; i++) {
+					linedraw(
+						imgAbsolutePosition.X + (gameDotsToPrint[i].X / preparedSizes[setLocation].X) * imgCurrentSize.X,
+						imgAbsolutePosition.Y + (gameDotsToPrint[i].Y / preparedSizes[setLocation].Y) * imgCurrentSize.Y,
+						imgAbsolutePosition.X + (playerDotsToPrint[i].X / preparedSizes[setLocation].X) * imgCurrentSize.X,
+						imgAbsolutePosition.Y + (playerDotsToPrint[i].Y / preparedSizes[setLocation].Y) * imgCurrentSize.Y
+					);
+				}
+			}
+			
+			function placeRequiredDots() {
+				placeDots(gameDotsToPrint, 'game_dot');
+				placeDots(playerDotsToPrint, 'player_dot');
+				
+				placeGameLinesForLocation();
+			}
+			
+			function selectLocation() {
+				setLocation = document.getElementById(this.id).innerHTML;
+				locations = document.getElementsByClassName('locations');
+				for (var i = 0; i < locations.length; i++) {
+					locations[i].style.display = "none";
+				}
+				image = document.getElementById('sat_image');
+				image.src = preparedImages[setLocation];
+				removeRules();
+				startBtn = document.getElementById('start');
+				startBtn.style.display = "block";
+			}
+			
+			function addLocations() {
+				btnHolder = document.getElementById('buttons');
+				for (var i = 0; i < preparedLocations.length; i++) {
+					let btn = document.createElement('button');
+					btn.type = 'button';
+					btn.id = 'loc' + i;
+					btn.classList.add('locations');
+					btn.innerHTML = preparedLocations[i];
+					btn.addEventListener('click', selectLocation);
+					btnHolder.append(btn);
+				}
+			}
+			
+			function attachDotMarker() {
+				imgHolder = document.getElementById('sat_clicker');
+				imgItself = document.getElementById('sat_image');
+				
+				new ResizeObserver(placeRequiredDots).observe(imgItself);
+				window.addEventListener('resize', placeRequiredDots , true);
+			}
+			
+			function attachStartOnClick() {
+				document.getElementById('start').addEventListener('click', startGame)
+			}
+			
+			function userImageClick() {
+				absPosX = window.event.pageX;
+				absPosY = window.event.pageY;
+				imgItself = document.getElementById('sat_image');
+				imgAbsolutePosition = getAbsolutePosition(imgItself);
+				imgPosX = absPosX - imgAbsolutePosition.X;
+				imgPosY = absPosY - imgAbsolutePosition.Y;
+				relPos = {
+					X: (imgPosX / imgItself.offsetWidth) * preparedSizes[setLocation].X,
+					Y: (imgPosY / imgItself.offsetHeight) * preparedSizes[setLocation].Y
+				}				
+				playerDotsToPrint.push({X: relPos.X, Y: relPos.Y});
+				gameDotsToPrint.push(currentPlace);
+				currentPlace = {Name:'', X:0, Y:0};
+				placeRequiredDots();
+			}
+			
+			function attachImageClickListener() {
+				imgItself = document.getElementById('sat_image');
+				console.log(imgItself);
+				imgItself.addEventListener('click', userImageClick, true);
+			}
+			
+			function setUp() {
+				addLocations();
+				attachDotMarker();
+				attachStartOnClick();
+			}
+			
+			setUp()
+		</script>
+	</body>
+</html>
