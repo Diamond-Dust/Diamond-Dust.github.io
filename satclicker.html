@@ -96,11 +96,11 @@
 				}
 				
 				.game_dot {
-					border: 0.25vw solid red;
+					border: 0.25vw solid #BB0000;
 				}
 				
 				.player_dot {
-					border: 0.25vw solid yellow;
+					border: 0.25vw solid #BBBB00;
 				}
 			}
 			
@@ -131,11 +131,11 @@
 				}
 				
 				.game_dot {
-					border: 0.25vh solid red;
+					border: 0.25vh solid #BB0000;
 				}
 				
 				.player_dot {
-					border: 0.25vh solid yellow;
+					border: 0.25vh solid #BBBB00;
 				}
 			}
 			
@@ -197,8 +197,6 @@
 			}
 			const preparedPlaces = {
 				Poland: [
-					{Name: "Southernmost Point", X: 1225, Y: 1383},
-					{Name: "Northernmost Point", X: 603, Y: 89},
 					{Name: "Warszawa", X: 973, Y: 688},
 					{Name: "Lublin", X: 1186, Y: 905},
 					{Name: "Rzeszów", X: 1110, Y: 1165},
@@ -226,31 +224,6 @@
 					{Name: "Włocławek", X: 706, Y: 592},
 					{Name: "Toruń", X: 646, Y: 512},
 					{Name: "Bydgoszcz", X: 564, Y: 488},
-					{Name: "Bełchatów Powerplant", X: 738, Y: 900},
-					{Name: "Ojcowski National Park", X: 810, Y: 1129},
-					{Name: "Słowiński National Park", X: 468, Y: 117},
-					{Name: "Babiogórski National Park", X: 774, Y: 1261},
-					{Name: "Białowieski National Park", X: 1346, Y: 579},
-					{Name: "Biebrzański National Park", X: 1196, Y: 408},
-					{Name: "Bieszczadzki National Park", X: 1201, Y: 1365},
-					{Name: "Bory Tucholskie National Park", X: 504, Y: 329},
-					{Name: "Drawski National Park", X: 282, Y: 496},
-					{Name: "Tatrzański National Park", X: 830, Y: 1328},
-					{Name: "Gorczański National Park", X: 854, Y: 1272},
-					{Name: "Pieniński National Park", X: 888, Y: 1294},
-					{Name: "Góry Stołowe National Park", X: 343, Y: 1073},
-					{Name: "Karkonoski National Park", X: 225, Y: 996},
-					{Name: "Łódź", X: 763, Y: 790},
-					{Name: "Kampinoski National Park", X: 918, Y: 667},
-					{Name: "Magurski National Park", X: 1038, Y: 1265},
-					{Name: "Narwiański National Park", X: 1225, Y: 499},
-					{Name: "Poleski National Park", X: 1259, Y: 863},
-					{Name: "Roztoczański National Park", X: 1241, Y: 1046},
-					{Name: "Świętokrzyski National Park", X: 960, Y: 982},
-					{Name: "Ujście Warty National Park", X: 124, Y: 603},
-					{Name: "Wielkopolski National Park", X: 400, Y: 680},
-					{Name: "Wigierski National Park", X: 1276, Y: 306},
-					{Name: "Woliński National Park", X: 89, Y: 305},
 					{Name: "Hel", X: 671, Y: 142},
 					{Name: "Suwałki", X: 1222, Y: 263},
 					{Name: "Piła", X: 391, Y: 479},
@@ -279,6 +252,77 @@
 					{Name: "Inowrocław", X: 599, Y: 558},
 					{Name: "Nowy Targ", X: 839, Y: 1284},
 					{Name: "Nowy Sącz", X: 933, Y: 1257},
+					{Name: "Żnin", X: 524, Y: 549},
+					{Name: "Cedynia", X: 45, Y: 540},
+					{Name: "Sosnowiec", X: 717, Y: 1115},
+					{Name: "Mysłowice", X: 718, Y: 1121},
+					{Name: "Dąbrowa Górnicza", X: 726, Y: 1103},
+					{Name: "Chorzów", X: 692, Y: 1116},
+					{Name: "Gliwice", X: 659, Y: 1112},
+					{Name: "Zabrze", X: 669, Y: 1106},
+					{Name: "Bytom", X: 686, Y: 1099},
+					{Name: "Tychy", X: 698, Y: 1147},
+					{Name: "Żory", X: 667, Y: 1163},
+					{Name: "Rybnik", X: 636, Y: 1153},
+					{Name: "Oświęcim", X: 735, Y: 1166},
+					{Name: "Wadowice", X: 767, Y: 1198},
+					{Name: "Świnoujście", X: 77, Y: 303},
+					{Name: "Tarnobrzeg", X: 1065, Y: 1051},
+					{Name: "Pacanów", X: 978, Y: 1085},
+					{Name: "Zakopane", X: 833, Y: 1320},
+					{Name: "Starachowice", X: 982, Y: 949},
+					{Name: "Wąchock", X: 974, Y: 942},
+					{Name: "Cieszyn", X: 649, Y: 1227},
+					{Name: "Wisła", X: 684, Y: 1248},
+					{Name: "Wieluń", X: 640, Y: 908},
+					{Name: "Biała Podlaska", X: 1263, Y: 730},
+					{Name: "Terespol", X: 1324, Y: 724},
+					{Name: "Radom", X: 991, Y: 871},
+					{Name: "Tarczyn", X: 950, Y: 744},
+					{Name: "Pruszków", X: 943, Y: 698},
+					{Name: "Sejny", X: 1292, Y: 259},
+					{Name: "Sanok", X: 1137, Y: 1269},
+					{Name: "Krosno", X: 1075, Y: 1240},
+					{Name: "Gorlice", X: 994, Y: 1244},
+					{Name: "Prószków", X: 545, Y: 1049},
+					{Name: "Łomża", X: 1121, Y: 478},
+					{Name: "Jedwabne", X: 1150, Y: 442},
+					{Name: "Pułtusk", X: 983, Y: 581},
+					{Name: "Żelazowa Wola", X: 879, Y: 685},
+					{Name: "Koło", X: 650, Y: 694},
+					{Name: "Konin", X: 596, Y: 694},
+					{Name: "Kruszwica", X: 608, Y: 587},
+					{Name: "Żywiec", X: 726, Y: 1240},
+					
+					{Name: "Southernmost Point", X: 1225, Y: 1383},
+					
+					{Name: "Bełchatów Powerplant", X: 738, Y: 900},
+					
+					{Name: "Ojcowski National Park", X: 810, Y: 1129},
+					{Name: "Słowiński National Park", X: 468, Y: 117},
+					{Name: "Babiogórski National Park", X: 774, Y: 1261},
+					{Name: "Białowieski National Park", X: 1346, Y: 579},
+					{Name: "Biebrzański National Park", X: 1196, Y: 408},
+					{Name: "Bieszczadzki National Park", X: 1201, Y: 1365},
+					{Name: "Bory Tucholskie National Park", X: 504, Y: 329},
+					{Name: "Drawski National Park", X: 282, Y: 496},
+					{Name: "Tatrzański National Park", X: 830, Y: 1328},
+					{Name: "Gorczański National Park", X: 854, Y: 1272},
+					{Name: "Pieniński National Park", X: 888, Y: 1294},
+					{Name: "Góry Stołowe National Park", X: 343, Y: 1073},
+					{Name: "Karkonoski National Park", X: 225, Y: 996},
+					{Name: "Łódź", X: 763, Y: 790},
+					{Name: "Kampinoski National Park", X: 918, Y: 667},
+					{Name: "Magurski National Park", X: 1038, Y: 1265},
+					{Name: "Narwiański National Park", X: 1225, Y: 499},
+					{Name: "Poleski National Park", X: 1259, Y: 863},
+					{Name: "Roztoczański National Park", X: 1241, Y: 1046},
+					{Name: "Świętokrzyski National Park", X: 960, Y: 982},
+					{Name: "Ujście Warty National Park", X: 124, Y: 603},
+					{Name: "Wielkopolski National Park", X: 400, Y: 680},
+					{Name: "Wigierski National Park", X: 1276, Y: 306},
+					{Name: "Woliński National Park", X: 89, Y: 305},
+					
 					{Name: "Rysy Mountain", X: 847, Y: 1347},
 					{Name: "Babia Góra Mountain", X: 769, Y: 1264},
 					{Name: "Śnieżka Mountain", X: 253, Y: 1016},
@@ -607,17 +651,20 @@
 				dot.style.left = imgAbsolutePosition.X + (x / preparedSizes[setLocation].X) * imgItself.offsetWidth - dotSize.X / 2;
 				dot.style.top = imgAbsolutePosition.Y + (y / preparedSizes[setLocation].Y) * imgItself.offsetHeight - dotSize.Y / 2;
 				imgHolder.append(dot);
+				
+				return dot;
 			}
 			
-			function placeDots(locationList, dotClass) {
+			function placeDots(locationList, dotClass, lastDotColor) {
 				removeClass(dotClass);
 				for (var i = 0; i < locationList.length; i++) {
-					placeDotOnImage(locationList[i].X, locationList[i].Y, locationList[i].Name, dotClass);
+					dot = placeDotOnImage(locationList[i].X, locationList[i].Y, locationList[i].Name, dotClass);
 				}
+				dot.style.borderColor = lastDotColor;
 			}
 			
 			function placeAllDotsForLocation() {
-				placeDots(preparedPlaces[setLocation], 'game_dot');
+				placeDots(preparedPlaces[setLocation], 'game_dot', 'red');
 			}
 			
 			function placeGameLinesForLocation() {
@@ -644,8 +691,8 @@
 			
 			function placeRequiredDots() {
 				if (showGuesses) {
-					placeDots(gameDotsToPrint, 'game_dot');
-					placeDots(playerDotsToPrint, 'player_dot');
+					placeDots(gameDotsToPrint, 'game_dot', '#FF0000');
+					placeDots(playerDotsToPrint, 'player_dot', '#FFFF00');
 					
 					placeGameLinesForLocation();
 				} else {
