@@ -12,38 +12,14 @@
 			
 			h1 {
 				font-family: "American Captain", "Tahoma", monospace;
-				font-size: 4vh
+				font-size: 4vh;
+				margin: 0.75vh 0;
 			}
 			
 			footer {
 				font-size: 1vh;
 				width: 100%;
 				text-align: center;
-			}
-		
-			.word_box_container {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-			}
-			
-			.word_row_container {
-				display: flex;
-				flex-direction: row;
-			}
-			
-			.word_box_cell {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				min-height: 7.5vh;
-				min-width: 7.5vh;
-				border-width: 0.075vw;
-				border-color: black;
-				border-style: solid;
-				
-				font-family: "American Captain", "Tahoma", monospace;
-				font-size: 5vh;
 			}
 			
 			.word {
@@ -169,7 +145,6 @@
 			}
 			
 			.game_line {
-				border: 0.2vh solid white;
 				z-index: 50;
 			}
 		</style>
@@ -202,6 +177,7 @@
 		</article>
 		<article id="buttons">
 			<button type="button" class="start" id="start" style="display: none;">START</button>
+			<button type="button" class="start" id="next" style="display: none;">NEXT</button>
 			<button type="button" class="start" id="share" style="display: none;">SHARE</button>
 		</article>
 		<footer>
@@ -299,6 +275,7 @@
 			playerDotsToPrint = []; // {Name: "Słupsk", X: 435, Y: 174}
 			chosenPlacesIndexes = [];
 			currentPlace = {Name: '', X:0, Y:0};
+			showGuesses = false;
 
 			//---------------- https://stackoverflow.com/a/19301306 ------------------
 			var m_w = 123456789;
@@ -335,8 +312,23 @@
 				var m = (y2 - y1) / (x2 - x1);
 
 				var degree = Math.atan(m) * 180 / Math.PI;
+				
+				newLine = document.createElement('div');
+				newLine.classList.add('game_line');
+				newLine.style.transformOrigin = 'top left';
+				newLine.style.transform = 'rotate(' + degree + 'deg)';
+				newLine.style.width = lineLength + 'px';
+				newLine.style.height = '0.1vh';
+				newLine.style.background = 'white';
+				newLine.style.position = 'absolute';
+				newLine.style.top = y1 + 'px';
+				newLine.style.left = x1 + 'px';
+				
+				//TODO: Move a bit left & top so the ends of the lien are really in the desired points, rather than the corners of the rectangle being in those points
+				
+				document.getElementById('sat_clicker').appendChild(newLine);
 
-				document.getElementById('sat_clicker').innerHTML += "<div class='game_line' style='transform-origin: top left; transform: rotate(" + degree + "deg); width: " + lineLength + "px; height: 1px; background: black; position: absolute; top: " + y1 + "px; left: " + x1 + "px;'></div>";
+				//document.getElementById('sat_clicker').innerHTML += "<div class='game_line' style='transform-origin: top left; transform: rotate(" + degree + "deg); width: " + lineLength + "px; height: 1px; background: black; position: absolute; top: " + y1 + "px; left: " + x1 + "px;'></div>";
 			}
 			//---------------- https://stackoverflow.com/a/55963590 ------------------
 			
@@ -358,7 +350,7 @@
 				for (var i = 0; i < 10; i++) {
 					paragraph = document.createElement("p");
 					paragraph.setAttribute("class", "word");
-					paragraph.innerHTML = words[i];
+					paragraph.innerText = words[i];
 					if (allowedWords.has(words[i])) {
 						paragraph.setAttribute("style", "color: green;");
 						score++;
@@ -370,7 +362,7 @@
 				
 				paragraph = document.createElement("p");
 				paragraph.setAttribute("class", "score");
-				paragraph.innerHTML = score;
+				paragraph.innerText = score;
 				wordList.appendChild(paragraph);
 				
 				if (seedVal != -1) {
@@ -383,8 +375,8 @@
 			function cellClick() {
 				if (gameStarted) {
 					cell = document.getElementById(this.id);
-					if (cell.innerHTML == '') {
-						cell.innerHTML = currentLetter;
+					if (cell.innerText == '') {
+						cell.innerText = currentLetter;
 						column = parseInt(this.id.charAt(3));
 						row = parseInt(this.id.charAt(2));
 						letterGrid[row][column] = currentLetter;
@@ -443,7 +435,7 @@
 			}
 			
 			function updatePlaceName() {
-				document.getElementById('sought_place').innerHTML = currentPlace.Name;
+				document.getElementById('sought_place').innerText = currentPlace.Name;
 			}
 			
 			function startGame() {
@@ -475,6 +467,14 @@
 			
 			
 			
+			function nextToClick() {
+				showGuesses = false;
+				nextPlace();
+				updatePlaceName();
+				document.getElementById('next').style.display = "none";
+				placeRequiredDots();
+			}
+			
 			function removeRules() {
 				rules = document.getElementsByClassName('rules');
 				for (var i = 0; i < rules.length; i++) {
@@ -494,17 +494,63 @@
 				}
 			}
 			
-			function placeDotOnImage(x, y, name,specClass) {
+			function vh(v) {
+				cHeight = document.documentElement.clientHeight;
+				iHeight = window.innerHeight;
+				if (cHeight == "undefined") {
+					cHeight = 0;
+				}
+				if (iHeight == "undefined") {
+					iHeight = 0;
+				}
+				if (cHeight > iHeight) {
+					h = cHeight;
+				} else {
+					h = iHeight;
+				}
+				return (v * h) / 100
+			}
+			
+			function vw(v) {
+				cWidth = document.documentElement.clientWidth;
+				iWidth = window.innerWidth;
+				if (cWidth == "undefined") {
+					cWidth = 0;
+				}
+				if (iWidth == "undefined") {
+					iWidth = 0;
+				}
+				if (cWidth > iWidth) {
+					w = cWidth;
+				} else {
+					w = iWidth;
+				}
+				return (v * w) / 100
+			}
+			
+			function removeClass(classToRemove) {
+				els = document.getElementsByClassName(classToRemove);
+				while (els.length > 0) {
+					els[0].parentNode.removeChild(els[0]);
+				}
+			}
+			
+			function getDotSize() {
+				aspectRatio = window.innerWidth / window.innerHeight;
+				if (aspectRatio > 1) {
+					dotSize = {X: vh(0.25), Y: vh(0.25)};
+				} else {
+					dotSize = {X: vw(0.25), Y: vw(0.25)};
+				}
+				return dotSize;
+			}
+			
+			function placeDotOnImage(x, y, name, specClass) {
 				imgHolder = document.getElementById('sat_clicker');
 				imgItself = document.getElementById('sat_image');
 				imgAbsolutePosition = getAbsolutePosition(imgItself);
 				
-				aspectRatio = window.innerWidth / window.innerHeight;
-				if (aspectRatio > 1) {
-					dotSize = {X: window.innerHeight / 100 * 0.25, Y: window.innerHeight / 100 * 0.25}; //0.25vh
-				} else {
-					dotSize = {X: window.innerWidth / 100 * 0.25, Y: window.innerWidth / 100 * 0.25}; //0.25vw
-				}
+				dotSize = getDotSize();
 				
 				dot = document.createElement('div');
 				dot.id = 'dot_' + name;
@@ -516,12 +562,7 @@
 			}
 			
 			function placeDots(locationList, dotClass) {
-				imgHolder = document.getElementById('sat_clicker');
-				dots = document.getElementsByClassName(dotClass);
-				while (dots.length > 0) {
-					dots[0].parentNode.removeChild(dots[0]);
-				}
-				imgItself = document.getElementById('sat_image');
+				removeClass(dotClass);
 				for (var i = 0; i < locationList.length; i++) {
 					placeDotOnImage(locationList[i].X, locationList[i].Y, locationList[i].Name, dotClass);
 				}
@@ -540,7 +581,10 @@
 				imgItself = document.getElementById('sat_image');
 				imgAbsolutePosition = getAbsolutePosition(imgItself);
 				imgCurrentSize = {X: imgItself.offsetWidth, Y: imgItself.offsetHeight};
+				dotSize = getDotSize();
 				for (var i = 0; i < gameDotsToPrint.length; i++) {
+					// TODO: Do not draw if circles overlap
+					
 					linedraw(
 						imgAbsolutePosition.X + (gameDotsToPrint[i].X / preparedSizes[setLocation].X) * imgCurrentSize.X,
 						imgAbsolutePosition.Y + (gameDotsToPrint[i].Y / preparedSizes[setLocation].Y) * imgCurrentSize.Y,
@@ -551,20 +595,26 @@
 			}
 			
 			function placeRequiredDots() {
-				placeDots(gameDotsToPrint, 'game_dot');
-				placeDots(playerDotsToPrint, 'player_dot');
-				
-				placeGameLinesForLocation();
+				if (showGuesses) {
+					placeDots(gameDotsToPrint, 'game_dot');
+					placeDots(playerDotsToPrint, 'player_dot');
+					
+					placeGameLinesForLocation();
+				} else {
+					removeClass('game_dot');
+					removeClass('player_dot');
+					removeClass('game_line');
+				}
 			}
 			
 			function selectLocation() {
-				setLocation = document.getElementById(this.id).innerHTML;
+				setLocation = document.getElementById(this.id).innerText;
 				locations = document.getElementsByClassName('locations');
 				for (var i = 0; i < locations.length; i++) {
 					locations[i].style.display = "none";
 				}
-				image = document.getElementById('sat_image');
-				image.src = preparedImages[setLocation];
+				imgItself = document.getElementById('sat_image');
+				imgItself.src = preparedImages[setLocation];
 				removeRules();
 				startBtn = document.getElementById('start');
 				startBtn.style.display = "block";
@@ -577,7 +627,7 @@
 					btn.type = 'button';
 					btn.id = 'loc' + i;
 					btn.classList.add('locations');
-					btn.innerHTML = preparedLocations[i];
+					btn.innerText = preparedLocations[i];
 					btn.addEventListener('click', selectLocation);
 					btnHolder.append(btn);
 				}
@@ -596,31 +646,41 @@
 			}
 			
 			function userImageClick() {
-				absPosX = window.event.pageX;
-				absPosY = window.event.pageY;
+				console.log("click");
+			
 				imgItself = document.getElementById('sat_image');
 				imgAbsolutePosition = getAbsolutePosition(imgItself);
-				imgPosX = absPosX - imgAbsolutePosition.X;
-				imgPosY = absPosY - imgAbsolutePosition.Y;
-				relPos = {
-					X: (imgPosX / imgItself.offsetWidth) * preparedSizes[setLocation].X,
-					Y: (imgPosY / imgItself.offsetHeight) * preparedSizes[setLocation].Y
-				}				
-				playerDotsToPrint.push({X: relPos.X, Y: relPos.Y});
+				
+				absPos = {X: window.event.pageX, Y: window.event.pageY};
+				imgPos = {X: absPos.X - imgAbsolutePosition.X, Y: absPos.Y - imgAbsolutePosition.Y};
+				scaledImgPos = {
+					X: (imgPos.X / imgItself.offsetWidth) * preparedSizes[setLocation].X,
+					Y: (imgPos.Y / imgItself.offsetHeight) * preparedSizes[setLocation].Y
+				}
+				
+				playerDotsToPrint.push({X: scaledImgPos.X, Y: scaledImgPos.Y});
 				gameDotsToPrint.push(currentPlace);
 				currentPlace = {Name:'', X:0, Y:0};
+				
+				document.getElementById('next').style.display = "block";
+				showGuesses = true;
 				placeRequiredDots();
 			}
 			
 			function attachImageClickListener() {
 				imgItself = document.getElementById('sat_image');
-				imgItself.addEventListener('click', userImageClick, true);
+				imgItself.addEventListener('click', userImageClick, false);
+			}
+			
+			function attachNextOnClick() {
+				document.getElementById('next').addEventListener('click', nextToClick)
 			}
 			
 			function setUp() {
 				addLocations();
 				attachDotMarker();
 				attachStartOnClick();
+				attachNextOnClick();
 			}
 			
 			setUp()
