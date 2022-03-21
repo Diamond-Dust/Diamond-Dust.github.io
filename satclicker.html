@@ -335,8 +335,6 @@
 				var m = (y2 - y1) / (x2 - x1);
 
 				var degree = Math.atan(m) * 180 / Math.PI;
-				
-				console.log({X:x1, Y:y1});
 
 				document.getElementById('sat_clicker').innerHTML += "<div class='game_line' style='transform-origin: top left; transform: rotate(" + degree + "deg); width: " + lineLength + "px; height: 1px; background: black; position: absolute; top: " + y1 + "px; left: " + x1 + "px;'></div>";
 			}
@@ -500,12 +498,20 @@
 				imgHolder = document.getElementById('sat_clicker');
 				imgItself = document.getElementById('sat_image');
 				imgAbsolutePosition = getAbsolutePosition(imgItself);
+				
+				aspectRatio = window.innerWidth / window.innerHeight;
+				if (aspectRatio > 1) {
+					dotSize = {X: window.innerHeight / 100 * 0.25, Y: window.innerHeight / 100 * 0.25}; //0.25vh
+				} else {
+					dotSize = {X: window.innerWidth / 100 * 0.25, Y: window.innerWidth / 100 * 0.25}; //0.25vw
+				}
+				
 				dot = document.createElement('div');
 				dot.id = 'dot_' + name;
 				dot.classList.add('dot');
 				dot.classList.add(specClass);
-				dot.style.left = imgAbsolutePosition.X + (x / preparedSizes[setLocation].X) * imgItself.offsetWidth;
-				dot.style.top = imgAbsolutePosition.Y + (y / preparedSizes[setLocation].Y) * imgItself.offsetHeight;
+				dot.style.left = imgAbsolutePosition.X + (x / preparedSizes[setLocation].X) * imgItself.offsetWidth - dotSize.X / 2;
+				dot.style.top = imgAbsolutePosition.Y + (y / preparedSizes[setLocation].Y) * imgItself.offsetHeight - dotSize.Y / 2;
 				imgHolder.append(dot);
 			}
 			
@@ -515,10 +521,6 @@
 				while (dots.length > 0) {
 					dots[0].parentNode.removeChild(dots[0]);
 				}
-				
-				console.log(locationList);
-				console.log(dotClass);
-				
 				imgItself = document.getElementById('sat_image');
 				for (var i = 0; i < locationList.length; i++) {
 					placeDotOnImage(locationList[i].X, locationList[i].Y, locationList[i].Name, dotClass);
@@ -612,7 +614,6 @@
 			
 			function attachImageClickListener() {
 				imgItself = document.getElementById('sat_image');
-				console.log(imgItself);
 				imgItself.addEventListener('click', userImageClick, true);
 			}
 			
