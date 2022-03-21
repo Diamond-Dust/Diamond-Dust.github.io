@@ -311,7 +311,8 @@
 				var lineLength = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 				var m = (y2 - y1) / (x2 - x1);
 
-				var degree = Math.atan(m) * 180 / Math.PI;
+				var rad = Math.atan(m)
+				var degree = rad * 180 / Math.PI;
 				
 				newLine = document.createElement('div');
 				newLine.classList.add('game_line');
@@ -321,10 +322,15 @@
 				newLine.style.height = '0.1vh';
 				newLine.style.background = 'white';
 				newLine.style.position = 'absolute';
-				newLine.style.top = y1 + 'px';
-				newLine.style.left = x1 + 'px';
 				
-				//TODO: Move a bit left & top so the ends of the lien are really in the desired points, rather than the corners of the rectangle being in those points
+				//TODO: Move a bit left & top so the ends of the line are really in the desired points, rather than the corners of the rectangle being in those points
+				var upVecDim = -vh(0.05);
+				upVec = {
+					X: upVecDim * Math.sin(rad), 
+					Y: upVecDim * Math.cos(rad)
+				}
+				newLine.style.top = (y1 + upVec.Y) + 'px';
+				newLine.style.left = (x1 + upVec.X) + 'px';
 				
 				document.getElementById('sat_clicker').appendChild(newLine);
 
