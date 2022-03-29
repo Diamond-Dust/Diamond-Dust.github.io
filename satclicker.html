@@ -51,7 +51,7 @@
 				margin: 0vh 1vw;
 			}
 			
-			.start {
+			.button {
 				padding: 1vh 1.5vh;
 				border: none;
 				border-radius: 5%;
@@ -69,83 +69,102 @@
 				align-content: flex-end;
 			}
 			
+			#sought_place {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+			
+			.dot {
+				position: absolute;
+				z-index: 100;
+				border-radius: 100%;
+				border-style: solid;
+			}
+			
+			.game_dot {
+				border-color: #BB0000;
+			}
+			
+			.player_dot {
+				border-color: #BBBB00;
+			}
+			
+			.guess_dot {
+				border-color: #00FFFF;
+			}
+			
+			.game_line {
+				z-index: 50;
+				transform-origin: top left;
+				background-color: white;
+				position: absolute;
+			}
+			
+			.sat_clicker {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+			
+			.sat_image {
+				display: block;
+				object-fit: contain;
+			}
+			
+			.wide_image {
+				width: 100%;
+				max-height: 100%;
+				height: auto;
+			}
+			
+			.tall_image {
+				height: 100%;
+				max-width: 100%;
+				width: auto;
+			}
+			
 			@media (max-aspect-ratio: 1/1) {				
 				#sought_place {
 					font-size: 8vw;
-					
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					
 					min-height: 9vw;
 					min-width: 9vw;
 				}
 				
-				#sat_image {
-					display: block;
-					max-width: 70vw;
-					max-height: 70vw;
+				.sat_clicker {
+					height: 70vw;
+					width: 90vw;
 				}
 				
-				.game_dot {
+				.dot {
 					height: 0.25vw;
 					width: 0.25vw;
-					position: absolute;
-					z-index: 100;
-					border-radius: 100%;
-				}
-				
-				.game_dot {
-					border: 0.25vw solid #BB0000;
-				}
-				
-				.player_dot {
-					border: 0.25vw solid #BBBB00;
+					border-width: 0.25vw;
 				}
 			}
 			
 			@media (min-aspect-ratio: 1/1) {				
 				#sought_place {
 					font-size: 4vh;
-					
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					
 					min-height: 5vh;
 					min-width: 5vh;
 				}
 				
-				#sat_image {
-					display: block;
-					max-width: 70vh;
-					max-height: 70vh;
+				.sat_clicker {
+					height: 70vh;
+					width: 90vh;
 				}
 				
 				.dot {
 					height: 0.25vh;
 					width: 0.25vh;
-					position: absolute;
-					z-index: 100;
-					border-radius: 100%;
-				}
-				
-				.game_dot {
-					border: 0.25vh solid #BB0000;
-				}
-				
-				.player_dot {
-					border: 0.25vh solid #BBBB00;
+					border-width: 0.25vh;
 				}
 			}
 			
 			#buttons {
 				display: flex;
 				justify-content: center;
-			}
-			
-			.game_line {
-				z-index: 50;
 			}
 		</style>
 		<link rel="shortcut icon" href="satclicker/favicon.ico" type="image/x-icon">  
@@ -158,8 +177,8 @@
 			<div id="sought_place_section">
 				<div id="sought_place" style="visibility: hidden;"> A </div>
 			</div>
-			<div id="sat_clicker">
-				<img id="sat_image"></img>
+			<div id="sat_clicker" class="empty_sat_clicker">
+				<img id="sat_image" class="empty_sat_image"></img>
 				<div id="running_score">
 					<div id="place_number"></div>
 					<div id="average_distance"></div>
@@ -176,27 +195,36 @@
 			<p class="rules">Have fun!</p>
 		</article>
 		<article id="buttons">
-			<button type="button" class="start" id="start" style="display: none;">START</button>
-			<button type="button" class="start" id="next" style="display: none;">NEXT</button>
-			<button type="button" class="start" id="share" style="display: none;">SHARE</button>
+			<button type="button" class="button" id="d1" style="visibility: hidden;">DUMMY</button>
+			<button type="button" class="button" id="start" style="display: none;">START</button>
+			<button type="button" class="button" id="confirm" style="display: none;">CONFIRM</button>
+			<button type="button" class="button" id="next" style="display: none;">NEXT</button>
+			<button type="button" class="button" id="share" style="display: none;">SHARE</button>
+			<button type="button" class="button" id="d2" style="visibility: hidden;">DUMMY</button>
 		</article>
 		<footer>
 			Łukasz Mrugała, 2022.
 		</footer>
 		
 		<script>
-			const preparedLocations = ["Poland"];
+			const preparedLocations = ["Poland", "Ukraine"];
 			const preparedImages = {
-				Poland: "satclicker/sat-poland.png"
+				Poland: "satclicker/sat-poland.png",
+				Ukraine: "satclicker/sat-ukraine.png"
 			};
 			const preparedSizes = {
 				Poland: {
 					X: 1400,
 					Y: 1400
+				},
+				Ukraine: {
+					X: 5030,
+					Y: 3386
 				}
 			}
 			const preparedPlaces = {
 				Poland: [
+					//Cities
 					{Name: "Warszawa", X: 973, Y: 688},
 					{Name: "Lublin", X: 1186, Y: 905},
 					{Name: "Rzeszów", X: 1110, Y: 1165},
@@ -323,11 +351,23 @@
 					{Name: "Leżajsk", X: 1165, Y: 1116},
 					{Name: "Lębork", X: 529, Y: 159},
 					{Name: "Kołobrzeg", X: 229, Y: 245},
+					{Name: "Zawiercie", X: 759, Y: 1069},
+					{Name: "Myszków", X: 746, Y: 1047},
+					{Name: "Żarki", X: 749, Y: 1039},
+					{Name: "Działdowo", X: 860, Y: 460},
+					{Name: "Lębork", X: 528, Y: 159},
+					{Name: "Pszczyna", X: 691, Y: 1180},
+					{Name: "Łańcut", X: 1139, Y: 1159},
+					{Name: "Mińsk Mazowiecki", X: 1051, Y: 699},
+					{Name: "Jastrzębie-Zdrój", X: 636, Y: 1178},
 					
+					//Special point
 					{Name: "Southernmost Point", X: 1225, Y: 1383},
 					
+					//Mine seen from space
 					{Name: "Bełchatów Powerplant", X: 738, Y: 900},
 					
+					// National Parks
 					{Name: "Ojcowski National Park", X: 810, Y: 1129},
 					{Name: "Słowiński National Park", X: 468, Y: 117},
 					{Name: "Babiogórski National Park", X: 774, Y: 1261},
@@ -353,6 +393,7 @@
 					{Name: "Wigierski National Park", X: 1276, Y: 306},
 					{Name: "Woliński National Park", X: 89, Y: 305},
 					
+					// Crown of Poland
 					{Name: "Rysy Mountain", X: 847, Y: 1347},
 					{Name: "Babia Góra Mountain", X: 769, Y: 1264},
 					{Name: "Śnieżka Mountain", X: 253, Y: 1016},
@@ -382,16 +423,131 @@
 					{Name: "Skopiec Mountain", X: 275, Y: 969},
 					{Name: "Ślęża Mountain", X: 386, Y: 991},
 					{Name: "Łysica Mountain", X: 958, Y: 982}
+				],
+				Ukraine: [
+					//Biggest cities
+					//>1mil
+					{Name: "Київ (Kyiv)", X: 2337, Y: 869},
+					{Name: "Харків (Kharkiv)", X: 3898, Y: 1059},
+					{Name: "Одеса (Odessa)", X: 2396, Y: 2509},
+					//>500k
+					{Name: "Дніпро (Dnipro)", X: 3565, Y: 1700},
+					{Name: "Донецьк (Donetsk)", X: 4329, Y: 1893},
+					{Name: "Запоріжжя (Zaporizhzhia)", X: 3605, Y: 1963},
+					{Name: "Львів (Lviv)", X: 563, Y: 1128},
+					{Name: "Кривий Ріг (Kryvyi Rih)", X: 3123, Y: 1931},
+					//>250k
+					{Name: "Миколаїв (Mykolaiv)", X: 2737, Y: 2309},
+					{Name: "Севасто́поль (Sevastopol)", X: 3158, Y: 3237},
+					{Name: "Маріуполь (Mariupol)", X: 4258, Y: 2255},
+					{Name: "Луганськ (Luhansk)", X: 4732, Y: 1662},
+					{Name: "Вінниця (Vinnytsia)", X: 1772, Y: 1385},
+					{Name: "Макіївка (Makiivka)", X: 4367, Y: 1876},
+					{Name: "Сімферополь (Simferopol)", X: 3317, Y: 3101},
+					{Name: "Чернігів (Chernihiv)", X: 2549, Y: 417},
+					{Name: "Херсон (Kherson)", X: 2909, Y: 2442},
+					{Name: "Полтава (Poltava)", X: 3438, Y: 1236},
+					{Name: "Хмельницький (Khmelnytskyi)", X: 1368, Y: 1308},
+					{Name: "Черкаси (Cherkasy)", X: 2757, Y: 1298},
+					{Name: "Чернівці (Chernivtsi)", X: 1085, Y: 1775},
+					{Name: "Житомир (Zhytomyr)", X: 1830, Y: 954},
+					{Name: "Суми (Sumy)", X: 3505, Y: 672},
+					//>100k
+					{Name: "Рівне (Rivne)", X: 1190, Y: 800},
+					{Name: "Горлівка (Horlivka)", X: 4395, Y: 1751},
+					{Name: "Івано-Франківськ (Ivano-Frankivsk)", X: 752, Y: 1514},
+					{Name: "Кам'янське (Kamianske)", X: 3457, Y: 1683},
+					{Name: "Тернопіль (Ternopil)", X: 990, Y: 1251},
+					{Name: "Кропивницький (Kropyvnytskyi)", X: 2814, Y: 1686},
+					{Name: "Кременчук (Kremenchuk)", X: 3136, Y: 1437},
+					{Name: "Луцьк (Lutsk)", X: 918, Y: 743},
+					{Name: "Біла Церква (Bila Tserkva)", X: 2226, Y: 1146},
+					{Name: "Керч (Kerch)", X: 3962, Y: 2945},
+					{Name: "Мелітополь (Melitopol)", X: 3663, Y: 2360},
+					{Name: "Краматорськ (Kramatorsk)", X: 4261, Y: 1597},
+					{Name: "Ужгород (Uzhhorod)", X: 87, Y: 1637},
+					{Name: "Бровари (Brovary)", X: 2406, Y: 848},
+					{Name: "Євпаторія (Yevpatoria)", X: 3111, Y: 3003},
+					{Name: "Бердянськ (Berdiansk)", X: 4052, Y: 2396},
+					{Name: "Нікополь (Nikopol)", X: 3393, Y: 2064},
+					{Name: "Слов'янськ (Sloviansk)", X: 4276, Y: 1541},
+					{Name: "Алчевськ (Alchevsk)", X: 4593, Y: 1694},
+					{Name: "Павлоград (Pavlohrad)", X: 3798, Y: 1680},
+					{Name: "Сєвєродонецьк (Sievierodonetsk)", X: 4515, Y: 1506},
+					//>50k
+					{Name: "Кам'янець-Подільський (Kamianets-Podilskyi)", X: 1260, Y: 1610},
+					{Name: "Лисичанськ (Lysychansk)", X: 4503, Y: 1525},
+					{Name: "Мукачево (Mukachevo)", X: 209, Y: 1715},
+					{Name: "Конотоп (Konotop)", X: 3071, Y: 528},
+					{Name: "Умань (Uman)", X: 2256, Y: 1586},
+					{Name: "Хрустальний (Khrustalnyi)", X: 4632, Y: 1842},
+					{Name: "Ялта (Yalta)", X: 3330, Y: 3276},
+					{Name: "Олександрія (Oleksandriia)", X: 3046, Y: 1617},
+					{Name: "Єнакієве (Yenakiieve)", X: 4437, Y: 1806},
+					{Name: "Дрогобич (Drohobych)", X: 422, Y: 1333},
+					{Name: "Бердичів (Berdychiv)", X: 1808, Y: 1104},
+					{Name: "Кадіївка (Kadiyivka)", X: 4555, Y: 1664},
+					{Name: "Шостка (Shostka)", X: 3143, Y: 255},
+					{Name: "Бахмут (Bakhmut)", X: 4381, Y: 1653},
+					{Name: "Ізмаїл (Izmail)", X: 1877, Y: 2952},
+					{Name: "Новомосковськ (Novomoskovsk)", X: 3629, Y: 1637},
+					{Name: "Костянтинівка (Kostiantynivka)", X: 4302, Y: 1680},
+					{Name: "Ковель (Kovel)", X: 751, Y: 537},
+					{Name: "Феодосія (Feodosiya)", X: 3663, Y: 3071},
+					{Name: "Ніжин (Nizhyn)", X: 2711, Y: 611},
+					{Name: "Сміла (Smila)", X: 2704, Y: 1382},
+					{Name: "Калуш (Kalush)", X: 655, Y: 1476},
+					{Name: "Червоноград (Chervonohrad)", X: 618, Y: 897},
+					{Name: "Бориспіль (Boryspil)", X: 2454, Y: 912},
+					{Name: "Первомайськ (Pervomaisk)", X: 2427, Y: 1886},
+					{Name: "Довжанськ (Dovzhansk)", X: 4831, Y: 1865},
+					{Name: "Ірпінь (Irpin)", X: 2262, Y: 841},
+					{Name: "Коростень (Korosten)", X: 1826, Y: 654},
+					{Name: "Покровськ (Pokrovsk)", X: 4156, Y: 1779},
+					{Name: "Коломия (Kolomyia)", X: 839, Y: 1677},
+					{Name: "Стрий (Stryi)", X: 520, Y: 1370},
+					{Name: "Чорноморськ (Chornomorsk)", X: 2374, Y: 2577},
+					{Name: "Харцизьк (Khartsyzk)", X: 4416, Y: 1873},
+					{Name: "Рубіжне (Rubizhne)", X: 4486, Y: 1477},
+					{Name: "Новоград-Волинський (Novohrad-Volynskyi)", X: 1542, Y: 810},
+					{Name: "Дружківка (Druzhkivka)", X: 4256, Y: 1639},
+					{Name: "Лозова (Lozova)", X: 3919, Y: 1527},
+					{Name: "Чистякове (Chystiakove)", X: 4550, Y: 1884},
+					{Name: "Енергодар (Enerhodar)", X: 3465, Y: 2099},
+					{Name: "Прилуки (Pryluky)", X: 2849, Y: 812},
+					{Name: "Антрацит (Antratsyt)", X: 4676, Y: 1848},
+					{Name: "Нововолинськ (Novovolynsk)", X: 599, Y: 753},
+					{Name: "Горішні Плавні (Horishni Plavni)", X: 3190, Y: 1479},
+					
+					//Tripoints
+					{Name: "Ukraine-Moldova-Romania Tripoint (South)", X: 1707, Y: 2904},
+					{Name: "Ukraine-Moldova-Romania Tripoint (North)", X: 1275, Y: 1788},
+					{Name: "Ukraine-Hungary-Romania Tripoint", X: 254, Y: 1913},
+					{Name: "Ukraine-Slovakia-Hungary Tripoint", X: 51, Y: 1730},
+					{Name: "Ukraine-Poland-Slovakia Tripoint", X: 164, Y: 1447},
+					{Name: "Ukraine-Belarus-Poland Tripoint", X: 453, Y: 413},
+					{Name: "Ukraine-Russia-Belarus Tripoint", X: 2682, Y: 144},
+					{Name: "Ukraine-Azov Sea-Russia Tripoint", X: 4443, Y: 2252},
+					{Name: "Ukraine-Romania-Black Sea Tripoint", X: 2110, Y: 3007},
+					
+					//Important places
+					{Name: "Жовті Води (Zhovti Vody)", X: 3151, Y: 1757}, // <50k
+					{Name: "Чорнобиль (Chernobyl)", X: 2254, Y: 515},
+					{Name: "Chernobyl Nuclear Power Plant", X: 2222, Y: 463},
+					{Name: "Zaporizhzhia Nuclear Power Plant", X: 3448, Y: 2093},
+					{Name: "Прип'ять (Pripyat)", X: 2209, Y: 454}
 				]
 			}
 			
 			gameStarted = false;
 			setLocation = '';
-			gameDotsToPrint = []; // {Name: "Ełk", X: 1159, Y: 327}
-			playerDotsToPrint = []; // {Name: "Słupsk", X: 435, Y: 174}
+			gameDotsToPrint = [];
+			playerDotsToPrint = [];
 			chosenPlacesIndexes = [];
+			currentClick = {X:0, Y:0};
 			currentPlace = {Name: '', X:0, Y:0};
 			showGuesses = false;
+			showCurrentGuess = false;
 
 			//---------------- https://stackoverflow.com/a/19301306 ------------------
 			var m_w = 123456789;
@@ -429,18 +585,16 @@
 
 				var rad = Math.atan(m)
 				var degree = rad * 180 / Math.PI;
+				const lineHeightVh = 0.1;
 				
 				newLine = document.createElement('div');
 				newLine.classList.add('game_line');
-				newLine.style.transformOrigin = 'top left';
+				
 				newLine.style.transform = 'rotate(' + degree + 'deg)';
 				newLine.style.width = lineLength + 'px';
-				newLine.style.height = '0.1vh';
-				newLine.style.background = 'white';
-				newLine.style.position = 'absolute';
+				newLine.style.height = lineHeightVh + 'vh';
 				
-				//TODO: Move a bit left & top so the ends of the line are really in the desired points, rather than the corners of the rectangle being in those points
-				var upVecDim = -vh(0.05);
+				var upVecDim = -vh(lineHeightVh / 2);
 				upVec = {
 					X: upVecDim * Math.sin(rad), 
 					Y: upVecDim * Math.cos(rad)
@@ -449,106 +603,8 @@
 				newLine.style.left = (x1 + upVec.X) + 'px';
 				
 				document.getElementById('sat_clicker').appendChild(newLine);
-
-				//document.getElementById('sat_clicker').innerHTML += "<div class='game_line' style='transform-origin: top left; transform: rotate(" + degree + "deg); width: " + lineLength + "px; height: 1px; background: black; position: absolute; top: " + y1 + "px; left: " + x1 + "px;'></div>";
 			}
 			//---------------- https://stackoverflow.com/a/55963590 ------------------
-			
-			
-			function processScore() {
-				words = [];
-				for (var i = 0; i < 4; i++) {
-					words.push(letterGrid[i][0] + letterGrid[i][1] + letterGrid[i][2] + letterGrid[i][3]);
-				}
-				for (var i = 0; i < 4; i++) {
-					words.push(letterGrid[0][i] + letterGrid[1][i] + letterGrid[2][i] + letterGrid[3][i]);
-				}
-				words.push(letterGrid[0][0] + letterGrid[1][1] + letterGrid[2][2] + letterGrid[3][3]);
-				words.push(letterGrid[3][0] + letterGrid[2][1] + letterGrid[1][2] + letterGrid[0][3]);
-				
-				score = 0;
-				
-				wordList = document.getElementById("word_list");
-				for (var i = 0; i < 10; i++) {
-					paragraph = document.createElement("p");
-					paragraph.setAttribute("class", "word");
-					paragraph.innerText = words[i];
-					if (allowedWords.has(words[i])) {
-						paragraph.setAttribute("style", "color: green;");
-						score++;
-					} else {
-						paragraph.setAttribute("style", "color: red;");
-					}
-					wordList.appendChild(paragraph);
-				}
-				
-				paragraph = document.createElement("p");
-				paragraph.setAttribute("class", "score");
-				paragraph.innerText = score;
-				wordList.appendChild(paragraph);
-				
-				if (seedVal != -1) {
-					document.getElementById('share').removeAttribute('style');
-				}
-				
-				return score;
-			}
-			
-			function cellClick() {
-				if (gameStarted) {
-					cell = document.getElementById(this.id);
-					if (cell.innerText == '') {
-						cell.innerText = currentLetter;
-						column = parseInt(this.id.charAt(3));
-						row = parseInt(this.id.charAt(2));
-						letterGrid[row][column] = currentLetter;
-						if (previousLetters.length < 16) {
-							nextLetter();
-							updateLetters();
-						} else {
-							previousLetters += currentLetter;
-							currentLetter = '';
-							updateLetters();
-							processScore();
-						}
-					} else {
-					
-					}
-				}
-			}
-			
-			function shareGame() {
-				dateFromSeed = (seedVal + 100).toString();
-				dateFromSeed = dateFromSeed.slice(0, 4) + '-' + dateFromSeed.slice(4, 6) + '-' + dateFromSeed.slice(6, 8);
-			
-				copyText = 'WordBox ' + dateFromSeed + ' ' + document.getElementsByClassName('score')[0].innerText + '\n\n';
-				
-				copyText += '||`' + previousLetters + '`||\n';
-				for (var i = 0; i < 4; i++) {
-					copyText += '||`' + letterGrid[i][0] + letterGrid[i][1] + letterGrid[i][2] + letterGrid[i][3] + '`||\n';
-				}
-				
-				copyText += '\n' + 'https://diamond-dust.github.io/';
-			
-				navigator.clipboard.writeText(copyText);
-				
-				document.getElementById(this.id).style.visibility = "hidden";
-			}
-			
-			function addOnClicks() {
-				cells = document.getElementsByClassName('word_box_cell');
-				for (var i = 0; i < cells.length; i++) {
-					cells.item(i).addEventListener('click', cellClick)
-				}
-				
-				document.getElementById('daily').addEventListener('click', startDailyGame)
-				document.getElementById('train').addEventListener('click', startTrainGame)
-				document.getElementById('share').addEventListener('click', shareGame)
-			}
-			
-			
-			
-			
 			
 			function nextPlace() {
 				roll = random();
@@ -572,22 +628,6 @@
 				attachImageClickListener();
 				gameStarted = true;
 			}
-			
-			function startTrainGame() {
-				d = new Date();
-				seed(d.getTime());
-				startGame();
-			}
-			
-			function startDailyGame() {
-				d = new Date();
-				seedVal = d.getFullYear()*10000 + d.getMonth()*100 + d.getDate();
-				seed(seedVal);
-				startGame();
-			}			
-			
-			
-			
 			
 			function nextToClick() {
 				showGuesses = false;
@@ -657,13 +697,14 @@
 				}
 			}
 			
-			function getDotSize() {
-				aspectRatio = window.innerWidth / window.innerHeight;
-				if (aspectRatio > 1) {
-					dotSize = {X: vh(0.25), Y: vh(0.25)};
-				} else {
-					dotSize = {X: vw(0.25), Y: vw(0.25)};
-				}
+			function getDotSize(specClass) {
+				imgHolder = document.getElementById('sat_clicker');
+				dot = document.createElement('div');
+				dot.classList.add('dot');
+				dot.classList.add(specClass);
+				imgHolder.append(dot);
+				dotSize = {X: dot.offsetWidth, Y: dot.offsetHeight};
+				dot.remove();
 				return dotSize;
 			}
 			
@@ -672,15 +713,16 @@
 				imgItself = document.getElementById('sat_image');
 				imgAbsolutePosition = getAbsolutePosition(imgItself);
 				
-				dotSize = getDotSize();
+				dotSize = getDotSize(specClass);
 				
 				dot = document.createElement('div');
 				dot.id = 'dot_' + name;
 				dot.classList.add('dot');
 				dot.classList.add(specClass);
+				imgHolder.append(dot);
+				
 				dot.style.left = imgAbsolutePosition.X + (x / preparedSizes[setLocation].X) * imgItself.offsetWidth - dotSize.X / 2;
 				dot.style.top = imgAbsolutePosition.Y + (y / preparedSizes[setLocation].Y) * imgItself.offsetHeight - dotSize.Y / 2;
-				imgHolder.append(dot);
 				
 				return dot;
 			}
@@ -706,10 +748,7 @@
 				imgItself = document.getElementById('sat_image');
 				imgAbsolutePosition = getAbsolutePosition(imgItself);
 				imgCurrentSize = {X: imgItself.offsetWidth, Y: imgItself.offsetHeight};
-				dotSize = getDotSize();
 				for (var i = 0; i < gameDotsToPrint.length; i++) {
-					// TODO: Do not draw if circles overlap
-					
 					linedraw(
 						imgAbsolutePosition.X + (gameDotsToPrint[i].X / preparedSizes[setLocation].X) * imgCurrentSize.X,
 						imgAbsolutePosition.Y + (gameDotsToPrint[i].Y / preparedSizes[setLocation].Y) * imgCurrentSize.Y,
@@ -722,13 +761,28 @@
 			function placeRequiredDots() {
 				if (showGuesses) {
 					placeDots(gameDotsToPrint, 'game_dot', '#FF0000');
-					placeDots(playerDotsToPrint, 'player_dot', '#FFFF00');
+					placeDots(playerDotsToPrint, 'player_dot', '#00FFFF');
 					
 					placeGameLinesForLocation();
 				} else {
 					removeClass('game_dot');
 					removeClass('player_dot');
 					removeClass('game_line');
+				}
+				if (showCurrentGuess) {
+					removeClass('guess_dot');
+					dot = placeDotOnImage(currentClick.X, currentClick.Y, '', 'guess_dot');
+				} else {
+					removeClass('guess_dot');
+				}
+			}
+			
+			function getAspectRatioImageClass() {
+				aspectRatio = preparedSizes[setLocation].X / preparedSizes[setLocation].Y;
+				if (aspectRatio >= 1) {
+					return 'wide_image';
+				} else {
+					return 'tall_image';
 				}
 			}
 			
@@ -740,6 +794,14 @@
 				}
 				imgItself = document.getElementById('sat_image');
 				imgItself.src = preparedImages[setLocation];
+				imgItself.classList.add('sat_image');
+				imgItself.classList.add(getAspectRatioImageClass());
+				imgItself.classList.remove('empty_sat_image');
+				
+				imgHolder = document.getElementById('sat_clicker');
+				imgHolder.classList.add('sat_clicker');
+				imgHolder.classList.remove('empty_sat_clicker');
+				
 				removeRules();
 				startBtn = document.getElementById('start');
 				startBtn.style.display = "block";
@@ -754,7 +816,7 @@
 					btn.classList.add('locations');
 					btn.innerText = preparedLocations[i];
 					btn.addEventListener('click', selectLocation);
-					btnHolder.append(btn);
+					btnHolder.insertBefore(btn, btnHolder.lastElementChild);
 				}
 			}
 			
@@ -770,9 +832,25 @@
 				document.getElementById('start').addEventListener('click', startGame)
 			}
 			
-			function userImageClick() {
-				console.log("click");
+			function confirmOnClick() {
+				document.getElementById('confirm').style.display = "none";
+				document.getElementById('next').style.display = "block";
+				
+				playerDotsToPrint.push(currentClick);
+				gameDotsToPrint.push(currentPlace);
+				currentClick = {X:0, Y:0};
+				currentPlace = {Name:'', X:0, Y:0};
+				
+				showCurrentGuess = false;
+				showGuesses = true;
+				placeRequiredDots();
+			}
 			
+			function attachConfirmOnClick() {
+				document.getElementById('confirm').addEventListener('click', confirmOnClick)
+			}
+			
+			function userImageClick() {			
 				imgItself = document.getElementById('sat_image');
 				imgAbsolutePosition = getAbsolutePosition(imgItself);
 				
@@ -782,13 +860,10 @@
 					X: (imgPos.X / imgItself.offsetWidth) * preparedSizes[setLocation].X,
 					Y: (imgPos.Y / imgItself.offsetHeight) * preparedSizes[setLocation].Y
 				}
+				currentClick = {X: scaledImgPos.X, Y: scaledImgPos.Y};
 				
-				playerDotsToPrint.push({X: scaledImgPos.X, Y: scaledImgPos.Y});
-				gameDotsToPrint.push(currentPlace);
-				currentPlace = {Name:'', X:0, Y:0};
-				
-				document.getElementById('next').style.display = "block";
-				showGuesses = true;
+				document.getElementById('confirm').style.display = "block";
+				showCurrentGuess = true;
 				placeRequiredDots();
 			}
 			
@@ -805,6 +880,7 @@
 				addLocations();
 				attachDotMarker();
 				attachStartOnClick();
+				attachConfirmOnClick();
 				attachNextOnClick();
 			}
 			
