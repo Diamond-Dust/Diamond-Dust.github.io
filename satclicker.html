@@ -832,10 +832,7 @@
 				document.getElementById('start').addEventListener('click', startGame)
 			}
 			
-			function confirmOnClick() {
-				document.getElementById('confirm').style.display = "none";
-				document.getElementById('next').style.display = "block";
-				
+			function confirmOnClick() {				
 				playerDotsToPrint.push(currentClick);
 				gameDotsToPrint.push(currentPlace);
 				currentClick = {X:0, Y:0};
@@ -844,27 +841,33 @@
 				showCurrentGuess = false;
 				showGuesses = true;
 				placeRequiredDots();
+				
+				document.getElementById('confirm').style.display = "none";
+				document.getElementById('next').style.display = "block";
 			}
 			
 			function attachConfirmOnClick() {
 				document.getElementById('confirm').addEventListener('click', confirmOnClick)
 			}
 			
-			function userImageClick() {			
-				imgItself = document.getElementById('sat_image');
-				imgAbsolutePosition = getAbsolutePosition(imgItself);
-				
-				absPos = {X: window.event.pageX, Y: window.event.pageY};
-				imgPos = {X: absPos.X - imgAbsolutePosition.X, Y: absPos.Y - imgAbsolutePosition.Y};
-				scaledImgPos = {
-					X: (imgPos.X / imgItself.offsetWidth) * preparedSizes[setLocation].X,
-					Y: (imgPos.Y / imgItself.offsetHeight) * preparedSizes[setLocation].Y
+			function userImageClick() {
+				if (!showGuesses) {
+					imgItself = document.getElementById('sat_image');
+					imgAbsolutePosition = getAbsolutePosition(imgItself);
+					
+					absPos = {X: window.event.pageX, Y: window.event.pageY};
+					imgPos = {X: absPos.X - imgAbsolutePosition.X, Y: absPos.Y - imgAbsolutePosition.Y};
+					scaledImgPos = {
+						X: (imgPos.X / imgItself.offsetWidth) * preparedSizes[setLocation].X,
+						Y: (imgPos.Y / imgItself.offsetHeight) * preparedSizes[setLocation].Y
+					}
+					currentClick = {X: scaledImgPos.X, Y: scaledImgPos.Y};
+					
+					showCurrentGuess = true;
+					placeRequiredDots();
+					
+					document.getElementById('confirm').style.display = "block";
 				}
-				currentClick = {X: scaledImgPos.X, Y: scaledImgPos.Y};
-				
-				document.getElementById('confirm').style.display = "block";
-				showCurrentGuess = true;
-				placeRequiredDots();
 			}
 			
 			function attachImageClickListener() {
