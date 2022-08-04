@@ -124,7 +124,7 @@
 				width: auto;
 			}
 			
-			@media (max-aspect-ratio: 1/1) {				
+			@media (max-aspect-ratio: 1/1) {
 				#sought_place {
 					font-size: 8vw;
 					min-height: 9vw;
@@ -143,7 +143,7 @@
 				}
 			}
 			
-			@media (min-aspect-ratio: 1/1) {				
+			@media (min-aspect-ratio: 1/1) {
 				#sought_place {
 					font-size: 4vh;
 					min-height: 5vh;
@@ -167,7 +167,9 @@
 				justify-content: center;
 			}
 		</style>
-		<link rel="shortcut icon" href="satclicker/favicon.ico" type="image/x-icon">  
+		<link rel="shortcut icon" href="satclicker/favicon.ico" type="image/x-icon">
+		<script src="generic/auxiliary/seeded_random.js"></script>
+		<script src="generic/auxiliary/line_draw.js"></script>
 	</head>
 	<body>
 		<header>
@@ -548,63 +550,6 @@
 			currentPlace = {Name: '', X:0, Y:0};
 			showGuesses = false;
 			showCurrentGuess = false;
-
-			//---------------- https://stackoverflow.com/a/19301306 ------------------
-			var m_w = 123456789;
-			var m_z = 987654321;
-			var mask = 0xffffffff;
-			var seedVal = -1;
-
-			// Takes any integer
-			function seed(i) {
-				m_w = (123456789 + i) & mask;
-				m_z = (987654321 - i) & mask;
-			}
-
-			// Returns number between 0 (inclusive) and 1.0 (exclusive),
-			// just like Math.random().
-			function random()
-			{
-				m_z = (36969 * (m_z & 65535) + (m_z >> 16)) & mask;
-				m_w = (18000 * (m_w & 65535) + (m_w >> 16)) & mask;
-				var result = ((m_z << 16) + (m_w & 65535)) >>> 0;
-				result /= 4294967296;
-				return result;
-			}
-			//---------------- https://stackoverflow.com/a/19301306 ------------------
-			//---------------- https://stackoverflow.com/a/55963590 ------------------
-			function linedraw(x1, y1, x2, y2) {
-				if (x2 < x1) {
-					var tmp;
-					tmp = x2 ; x2 = x1 ; x1 = tmp;
-					tmp = y2 ; y2 = y1 ; y1 = tmp;
-				}
-
-				var lineLength = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-				var m = (y2 - y1) / (x2 - x1);
-
-				var rad = Math.atan(m)
-				var degree = rad * 180 / Math.PI;
-				const lineHeightVh = 0.1;
-				
-				newLine = document.createElement('div');
-				newLine.classList.add('game_line');
-				
-				newLine.style.transform = 'rotate(' + degree + 'deg)';
-				newLine.style.width = lineLength + 'px';
-				newLine.style.height = lineHeightVh + 'vh';
-				
-				var upVecDim = -vh(lineHeightVh / 2);
-				upVec = {
-					X: upVecDim * Math.sin(rad), 
-					Y: upVecDim * Math.cos(rad)
-				}
-				newLine.style.top = (y1 + upVec.Y) + 'px';
-				newLine.style.left = (x1 + upVec.X) + 'px';
-				
-				document.getElementById('sat_clicker').appendChild(newLine);
-			}
-			//---------------- https://stackoverflow.com/a/55963590 ------------------
 			
 			function nextPlace() {
 				roll = random();
@@ -654,40 +599,6 @@
 				} else {
 					return {X: el.x, Y: el.y};
 				}
-			}
-			
-			function vh(v) {
-				cHeight = document.documentElement.clientHeight;
-				iHeight = window.innerHeight;
-				if (cHeight == "undefined") {
-					cHeight = 0;
-				}
-				if (iHeight == "undefined") {
-					iHeight = 0;
-				}
-				if (cHeight > iHeight) {
-					h = cHeight;
-				} else {
-					h = iHeight;
-				}
-				return (v * h) / 100
-			}
-			
-			function vw(v) {
-				cWidth = document.documentElement.clientWidth;
-				iWidth = window.innerWidth;
-				if (cWidth == "undefined") {
-					cWidth = 0;
-				}
-				if (iWidth == "undefined") {
-					iWidth = 0;
-				}
-				if (cWidth > iWidth) {
-					w = cWidth;
-				} else {
-					w = iWidth;
-				}
-				return (v * w) / 100
 			}
 			
 			function removeClass(classToRemove) {
@@ -832,7 +743,7 @@
 				document.getElementById('start').addEventListener('click', startGame)
 			}
 			
-			function confirmOnClick() {				
+			function confirmOnClick() {
 				playerDotsToPrint.push(currentClick);
 				gameDotsToPrint.push(currentPlace);
 				currentClick = {X:0, Y:0};
