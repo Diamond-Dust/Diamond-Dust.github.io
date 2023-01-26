@@ -7,11 +7,87 @@
 			body {
 				background-color: #bbbbbb;
 			}
-			articles {
-				background-color: #888888;
-				display: grid;
-				grid-template-columns: 20vw 5vw 50vw 5vw 20vw;
+			
+			article > * {
+				width: 95%;
 			}
+			
+			@media (max-aspect-ratio: 1/1) {
+				articles {
+					background-color: #888888;
+					display: grid;
+					grid-template-columns: 7.5vw 2.5vw 80vw 2.5vw 7.5vw;
+				}
+				
+				toc {
+					width: 60%;
+					font-size: 21;
+				}
+				
+				article {
+					font-size: 12;
+				}
+			
+				section figure {
+					width: 85%;
+				}
+			
+				figure:hover{
+					color: #424242; 
+					-webkit-transition: all .3s ease-in;
+					-moz-transition: all .3s ease-in;
+					-ms-transition: all .3s ease-in;
+					-o-transition: all .3s ease-in;
+					transition: all .3s ease-in;
+					opacity: 1;
+					transform: scale(1.4);
+					-ms-transform: scale(1.4); /* IE 9 */
+					-webkit-transform: scale(1.4); /* Safari and Chrome */
+				}
+				
+				figcaption {
+					font-size: 18;
+				}
+			}
+			
+			@media (min-aspect-ratio: 1/1) {
+				articles {
+					background-color: #888888;
+					display: grid;
+					grid-template-columns: 20vw 5vw 50vw 5vw 20vw;
+				}
+				
+				toc {
+					width: 50%;
+					font-size: 16;
+				}
+				
+				article {
+					font-size: 16;
+				}
+			
+				section figure {
+					width: 50%;
+				}
+			
+				figure:hover{
+					color: #424242; 
+					-webkit-transition: all .3s ease-in;
+					-moz-transition: all .3s ease-in;
+					-ms-transition: all .3s ease-in;
+					-o-transition: all .3s ease-in;
+					transition: all .3s ease-in;
+					opacity: 1;
+					transform: scale(2);
+					-ms-transform: scale(2); /* IE 9 */
+					-webkit-transform: scale(2); /* Safari and Chrome */
+				}
+				
+				figcaption {
+					font-size: 16;
+				}
+			}
+			
 			article {
 				background-color: #ffffff;
 				grid-column: 3 / span 1;
@@ -20,12 +96,7 @@
 				align-items: center;
 				margin: 5vh 0;
 				border-radius: 1vh;
-				font-size: 16;
 				font-family: Tahoma;
-			}
-			
-			article > * {
-				width: 95%;
 			}
 			
 			article > h3 {
@@ -53,7 +124,6 @@
 			toc {
 				border: 2px black solid;
 				border-radius: 0.5vw;
-				width: 50%;
 				padding: 1vh 1vw;
 			}
 			
@@ -70,7 +140,6 @@
 			
 			section figure {
 				margin: 0;
-				width: 50%;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
@@ -84,19 +153,6 @@
 				text-align: center;
 				background-color: #ffffff;
 				margin-bottom: 1px;
-			}
-			
-			figure:hover{
-				color: #424242; 
-				-webkit-transition: all .3s ease-in;
-				-moz-transition: all .3s ease-in;
-				-ms-transition: all .3s ease-in;
-				-o-transition: all .3s ease-in;
-				transition: all .3s ease-in;
-				opacity: 1;
-				transform: scale(2);
-				-ms-transform: scale(2); /* IE 9 */
-				-webkit-transform: scale(2); /* Safari and Chrome */
 			}
 		</style>
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">  
@@ -172,7 +228,7 @@
 				
 				<p>
 				   Let me start by saying that it isn't a dealbreaker - many a player loves to play through the things they already know.
-				   But not everyone. So, to enchance the experience of returning players and to allow the mission creator to play their own mission, we need to make some changes.
+				   But not everyone. So, to enhance the experience of returning players and to allow the mission creator to play their own mission, we need to make some changes.
 				   There are many ways to achieve this, but they boil down to the one main component: unexpectedness. Two ways of achieving it that I could distill are:
 				</p>
 				
@@ -233,8 +289,9 @@
 				</p>
 				
 				<p>
-				   You can place a trigger inside the mission that, right after mission start, would just, 
-				   with the help of a <code>random</code> function and some <code>if...else</code> blocks, delete all but the one selected spawn group.
+				   If you did it manually, you could, for example, roll a die to choose a squad to keep and delete the others.
+				   We could do it with a <code>random</code> function and some <code>if...else</code> blocks. 
+				   We could put that code inside a trigger that fires after the mission start.
 				   That would work, of course, but is not ideal. The server still would need to spawn those things and then delete them, which is unnecessary work.
 				</p>
 				
