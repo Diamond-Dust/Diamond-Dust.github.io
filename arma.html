@@ -1,0 +1,306 @@
+<html>
+	<head>
+		<title>
+			ARMA 3 Articles
+		</title>
+		<style>
+			body {
+				background-color: #bbbbbb;
+			}
+			articles {
+				background-color: #888888;
+				display: grid;
+				grid-template-columns: 20vw 5vw 50vw 5vw 20vw;
+			}
+			article {
+				background-color: #ffffff;
+				grid-column: 3 / span 1;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				margin: 5vh 0;
+				border-radius: 1vh;
+				font-size: 16;
+				font-family: Tahoma;
+			}
+			
+			article > * {
+				width: 95%;
+			}
+			
+			article > h3 {
+				text-align: center;
+				font-size: 32;
+				margin-bottom: 1vh;
+			}
+			
+			article > h5 {
+				text-align: center;
+				font-size: 14;
+				color: #888888;
+				margin-top: 0;
+			}
+			
+			code {
+				background-color: #dddddd;
+			}
+			
+			section > h4 {
+				padding-left: 1vw;
+				font-size: 20;
+			}
+			
+			toc {
+				border: 2px black solid;
+				border-radius: 0.5vw;
+				width: 50%;
+				padding: 1vh 1vw;
+			}
+			
+			toc > a {
+				padding-left: 1vw;
+			}
+			
+			section {
+				display: flex;
+				flex-direction: column;
+				align-items: stretch;
+				margin-bottom: 5px;
+			}
+			
+			section figure {
+				margin: 0;
+				width: 50%;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				align-self: center;
+				box-shadow: 0px 5px 10px 0px grey;
+				margin: 5px 0;
+			}
+			
+			figure * {
+				width: 100%;
+				text-align: center;
+				background-color: #ffffff;
+				margin-bottom: 1px;
+			}
+			
+			figure:hover{
+				color: #424242; 
+				-webkit-transition: all .3s ease-in;
+				-moz-transition: all .3s ease-in;
+				-ms-transition: all .3s ease-in;
+				-o-transition: all .3s ease-in;
+				transition: all .3s ease-in;
+				opacity: 1;
+				transform: scale(2);
+				-ms-transform: scale(2); /* IE 9 */
+				-webkit-transform: scale(2); /* Safari and Chrome */
+			}
+		</style>
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">  
+	</head>
+	<body>
+		<articles>
+		<!-- ARTICLE TEMPLATE:
+		<article>
+			<h3> Name of the Article</h3>
+			<h5> CATEGORY/SUBTITLE </h5>
+			
+			<toc>
+				<a href="#ID_OF_SECTION1">TITLE OF SECTION 1</a> <br/>
+				<a href="#ID_OF_SECTION2">TITLE OF SECTION 2</a>
+			</toc>
+			
+			<section id="ID_OF_SECTION1">
+				<h4>TITLE OF SECTION 1</h4>
+				
+				<p>
+				   TEXT
+				</p>
+			</section>
+			
+			<section id="ID_OF_SECTION2">
+				<h4>TITLE OF SECTION 2</h4>
+				
+				<p>
+				   TEXT
+				</p>
+			</section>
+		</article>
+		-->
+		<article>
+			<h3> 1 of N problem using Probability of Presence</h3>
+			<h5> MISSION CREATION </h5>
+			
+			<toc>
+				<a href="#a1_s1_randomness_and_dynamics">Randomness and Dynamics</a> <br/>
+				<a href="#a1_s2_what_is_the_problem">What is the 1 of N problem in ARMA 3?</a> <br/>
+				<a href="#a1_s3_how_to_solve_it">How to Solve It?</a> <br/>
+			</toc>
+			
+			<section id="a1_s1_randomness_and_dynamics">
+				<h4>Randomness and Dynamics</h4>
+				
+				<p>Imagine that, as a mission creator, you would like to have a squad of infantry defend a village. 
+				   You can just place the squad in question inside the editor and it will be there. 
+				   With some waypoints, it can even patrol the place, which is what you want most of the time.
+				</p>
+				
+				<figure>
+					<img src="arma/imgs/art1_1.jpg" alt="ARMA 3 screenshot - a few big buildings near a lonely stretch of the road.">
+					<figcaption><i>These buildings look like an appropriate easy-to-deal-with hardpoints. We'll use them for this visualisation.</i></figcaption>
+				</figure> 
+				
+				<p>What if, however, you would like to create a hardpoint for your players to assault?
+				   Pretty easy stuff. You can choose a building inside the village or place some structure inside of it and place the squad in question there.
+				   To prevent them running out, you could use the <code>doStop this;</code> inside their Init 
+				   or set a Guard waypoint or use an AI module like LAMBS.
+				   Great stuff.
+				</p>
+				
+				<figure>
+					<img src="arma/imgs/art1_2.jpg" alt="ARMA 3 screenshot - a CSAT squat stands inside of one of the houses.">
+					<figcaption><i>One CSAT squad bravely defends this random stretch of road</i></figcaption>
+				</figure> 
+				
+				<p>
+				   You have now created a great mission and the people playing had fun. Now, however, they want to play it again. Also, you'd like to take part.
+				   After all, they had enjoyed it so much - why wouldn't you? But, there is a problem - both you and your returning players know the mission!
+				</p>
+				
+				<p>
+				   Let me start by saying that it isn't a dealbreaker - many a player loves to play through the things they already know.
+				   But not everyone. So, to enchance the experience of returning players and to allow the mission creator to play their own mission, we need to make some changes.
+				   There are many ways to achieve this, but they boil down to the one main component: unexpectedness. Two ways of achieving it that I could distill are:
+				</p>
+				
+				<ul>
+					<li> Dynamics - where the mission in some way responds to the actions of the players </li>
+					<li> Randomness - where the mission has elements that randomly change between playthroughs </li>
+				</ul>
+				
+				<p>
+					These two things are also inherent to playing ARMA and similar games. Whether playing versus AI or humans, they will, most of the time, react to what you're doing.
+					If you start shooting inside an enemy-held town, for example, expect someone to come running after you. That is dynamic play. 
+					Randomness can also be found in the minutiae of the game - does the enemy come around the wall to get me from the left or the right?
+				</p>
+				
+				<p>
+					We want to have those elements inside our mission, right from the EDEN Editor. In this case, we will focus on the randomness. 
+					To be more precise: on one specific case that might arise when adding randomness to our missions.
+				</p>
+				
+			</section>
+			
+			<section id="a1_s2_what_is_the_problem">
+				<h4>What is the 1 of N problem in ARMA 3?</h4>
+				
+				<p>
+				   You have identified a few spots in the village, which AI could occupy and defend pretty well and assault on which could be fun for players.
+				   You place the troops inside and think: It would be nice if the game could select one of these squads and spawn just one of them!
+				   That would make the difficulty for the players similar, no matter which one would be selected, as, all in all, all of them are just a squad of infantry.
+				</p>
+				
+				<figure>
+					<img src="arma/imgs/art1_3.jpg" alt="ARMA 3 screenshot - a CSAT squat stands inside of every big building.">
+					<figcaption><i>Now there is one squad per every suitable building.</i></figcaption>
+				</figure> 
+				
+				<p>
+				   So, how to do it? We want to stay in the editor and code as little as possible - the less .sqf we write, the less of a headache we'll get from reading the 
+				   Initialization Order Wiki article. And it allows us to easily use Modules that may not be documented enough for using them in scripts easily 
+				   (e.g., pertinent to this example - LAMBS Garrison Module). So, our parameters:
+				</p>
+				
+				<ul>
+					<li>Don't leave the editor</li>
+					<li>Keep the code to a minimum (e.g. in the Init lines)</li>
+				</ul>
+				
+				<p>
+				   This makes our <strong>1 of N problem</strong>: We want to spawn one of N possible groups of Units and Objects.
+				</p>
+				
+			</section>
+			
+			<section id="a1_s3_how_to_solve_it">
+				<h4>How to Solve It?</h4>
+				
+				<p>
+				   There are some ways of dealing with the problem badly. 
+				</p>
+				
+				<p>
+				   You can place a trigger inside the mission that, right after mission start, would just, 
+				   with the help of a <code>random</code> function and some <code>if...else</code> blocks, delete all but the one selected spawn group.
+				   That would work, of course, but is not ideal. The server still would need to spawn those things and then delete them, which is unnecessary work.
+				</p>
+				
+				<p>
+				   You may have noticed the "Probability of Presence" section of the unit initialisation. We could just set it at 1/N and call it a day.
+				   This would not work however, as it both wouldn't spawn the groups of units and objects together with a group and could spawn more than one set. 
+				</p>
+				
+				
+				<figure>
+					<img src="arma/imgs/art1_4.jpg" alt="ARMA 3 screenshot - a soldier with Probability of Presence reduced to 33%.">
+					<figcaption><i>This looks easy - just adjust the probability, right?</i></figcaption>
+				</figure> 
+				
+				<p>
+				   We can improve on this result, however. We can select one unit inside the group to act as an indicator. Let's call it <code>s_1_1</code> in the Variable Name section - first soldier of the first group.
+				   Now, we can put <code>alive s_1_1;</code> as the Condition of Presence for the Units inside of his spawn group. Now they'll appear together! Do the same for the rest of the groups.
+				   The same trick doesn't work for Objects, however - here you can use the deleting trigger mentioned earlier. Most foolproof is setting a variable like <code>s_1_1_existed = "";</code> 
+				   inside the <code>s_1_1</code>'s Init section and using <code>isNil "s_1_1" && isNil "s_1_1_existed"</code> as the trigger condition.
+				</p>
+				
+				
+				<figure>
+					<img src="arma/imgs/art1_6.jpg" alt="ARMA 3 screenshot - a soldier with a Condition of Presence of 'alive s_1_1'">
+					<figcaption><i>A random grunt in the first squad - note their Condition of Presence.</i></figcaption>
+				</figure> 
+				
+				<p>
+				   Lastly, we need to make the Probability of Presence select only one of our spawn groups. With each first soldier in the spawn group named (<code>s_1_1</code>, <code>s_2_1</code>, <code>s_3_1</code>, etc.), 
+				   it's pretty easy to do.
+				   Start with the first group and keep an order. Inside the Condition of Presence for the <code>s_1_1</code> of this group, put <code>true</code> and set their Probability of Presence at 1&frasl;N.
+				   Now, go to the next leader, <code>s_2_1</code>, and set their Condition of Presence as <code>isNil s_1_1;</code>. This means that <code>s_2_1</code> can only spawn if the <code>s_1_1</code> didn't appear.
+				   Set their Probability of Presence at 1&frasl;(N-1), as when the game considers <code>s_2_1</code>, there is one less group. Go over the rest of the spawn group leaders and set their Probabilities accordingly:
+				   set their Conditions as a conjunction of <code>isNil "s_n_1"</code> conditions and their Probabilities as 1&frasl;(N - &lt;number of already set spawn group leaders&gt;).
+				</p>
+				
+				
+				<figure>
+					<img src="arma/imgs/art1_5.jpg" alt="ARMA 3 screenshot - s_3_1 now has a Condition of Presence that is a conjunction of two isNils on the other two squad leads.">
+					<figcaption><i>The squad leader of the third squad, which is the last one for us, with all his code required for this to work.</i></figcaption>
+				</figure> 
+				
+				
+				<figure>
+					<img src="arma/imgs/art1_7.jpg" alt="ARMA 3 screenshot - a trigger that, when both s_1_1 and s_1_1_existed is Nil, deletes the f_1_1 flagpole.">
+					<figcaption><i>The f_1_1 flagpole of the first squad, an Object rather than a Unit, needs a Trigger to be deleted via a deleteVehicle funtion.</i></figcaption>
+				</figure> 
+				
+				<p>
+				   And that's it! Now only one of the N groups is spawned and all of it appears in the mission. Have fun creating!
+				</p>
+				
+				
+				<figure>
+					<img src="arma/imgs/art1_8.jpg" alt="ARMA 3 screenshot - three big buildings have a squad, flag and a trigger each.">
+					<figcaption><i>This barebone example mission with all the required parts - three squads, three flags and three triggers (with a Zeus to test it).</i></figcaption>
+				</figure> 
+				
+				
+				<figure>
+					<img src="arma/imgs/art1_9.jpg" alt="ARMA 3 screenshot - in the distance, you can see that a single building has a flagpole and a squad of soldiers nearby..">
+					<figcaption><i>And voila! The troops are where the flagpole is and there is only one set of them!.</i></figcaption>
+				</figure> 
+				
+			</section>
+		</article>
+		</articles>
+	</body>
+</html>
